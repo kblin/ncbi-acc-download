@@ -1,0 +1,2 @@
+[run]
+omit=ncbi_acc_download/__main__.py

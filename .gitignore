@@ -1,0 +1,11 @@
+*.swp
+*.pyc
+ncbi_acc_download.egg-info/*
+.coverage
+htmlcov/*
+.cache/*
+dist/*
+
+# Pycharm
+.idea/*
+
