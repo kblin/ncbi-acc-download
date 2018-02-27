@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Core functions of the ncbi-by-accession downloader"""
+"""Core functions of the ncbi-by-accession downloader."""
 from __future__ import print_function
 import requests
 import sys
@@ -35,6 +35,7 @@ ERROR_PATTERNS = (
 
 
 def download_from_ncbi(dl_id, molecule="nucleotide"):
+    """Download a single ID from NCBI and store it to a file."""
     # types: string, string -> None
     params = dict(tool='antiSMASH', retmode='text')
 
@@ -72,6 +73,4 @@ def download_from_ncbi(dl_id, molecule="nucleotide"):
                         params['id'], pattern))
 
             fh.write(chunk)
-
-
 
