@@ -63,6 +63,7 @@ setup(
     entry_points={
         'console_scripts': [
             'ncbi-acc-download=ncbi_acc_download.__main__:main',
+            'nad=ncbi_acc_download.__main__:main',
         ],
     },
     packages=['ncbi_acc_download'],
