@@ -54,7 +54,7 @@ class Config(object):
         return config
 
 
-def download_from_ncbi(dl_id, config):
+def download_from_ncbi(dl_id, config, filename=None):
     """Download a single ID from NCBI and store it to a file."""
     # types: string, string -> None
     params = dict(tool='antiSMASH', retmode='text')
@@ -82,7 +82,10 @@ def download_from_ncbi(dl_id, config):
         raise Exception("Download failed")
 
     safe_ids = params['id'][:20].replace(' ', '_')
-    outfile_name = "{ncbi_id}{ending}".format(ncbi_id=safe_ids, ending=file_ending)
+    if filename:
+        outfile_name = "{filename}{ending}".format(filename=filename, ending=file_ending)
+    else:
+        outfile_name = "{ncbi_id}{ending}".format(ncbi_id=safe_ids, ending=file_ending)
 
     with open(outfile_name, 'wb') as fh:
         # use a chunk size of 4k, as that's what most filesystems use these days
