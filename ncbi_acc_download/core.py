@@ -34,7 +34,27 @@ ERROR_PATTERNS = (
 )
 
 
-def download_from_ncbi(dl_id, molecule="nucleotide"):
+class Config(object):
+    """NCBI genome download configuration."""
+
+    __slots__ = (
+        'molecule',
+        'verbose',
+    )
+
+    def __init__(self, molecule, verbose):
+        """Initialise the config from scratch."""
+        self.molecule = molecule
+        self.verbose = verbose
+
+    @classmethod
+    def from_args(cls, args):
+        """Initialise from argpase.Namespace object."""
+        config = cls(args.molecule, args.verbose)
+        return config
+
+
+def download_from_ncbi(dl_id, config):
     """Download a single ID from NCBI and store it to a file."""
     # types: string, string -> None
     params = dict(tool='antiSMASH', retmode='text')
@@ -42,9 +62,9 @@ def download_from_ncbi(dl_id, molecule="nucleotide"):
     # delete / characters and as NCBI ignores IDs after #, do the same.
     params['id'] = dl_id
 
-    params['db'] = molecule
+    params['db'] = config.molecule
 
-    if molecule == 'nucleotide':
+    if config.molecule == 'nucleotide':
         params['rettype'] = 'gbwithparts'
         file_ending = ".gbk"
     else:
@@ -67,10 +87,14 @@ def download_from_ncbi(dl_id, molecule="nucleotide"):
     with open(outfile_name, 'wb') as fh:
         # use a chunk size of 4k, as that's what most filesystems use these days
         for chunk in r.iter_content(4096):
+            if config.verbose:
+                print('.', end='', file=sys.stderr, flush=True)
             for pattern in ERROR_PATTERNS:
                 if pattern in chunk:
                     raise Exception("Failed to download file with id {} from NCBI: {}".format(
                         params['id'], pattern))
 
             fh.write(chunk)
+    if config.verbose:
+        print('', file=sys.stderr)
 
