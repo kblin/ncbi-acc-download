@@ -1,11 +1,12 @@
 #!/usr/bin/env python
-"""Get sequences from NCBI by GenBank/RefSeq ID"""
+"""Get sequences from NCBI by GenBank/RefSeq ID."""
 
 from argparse import ArgumentParser
 
 from .core import download_from_ncbi
 
 def main():
+    """Command line handling."""
     parser = ArgumentParser()
 
     parser.add_argument('ids', nargs='+', metavar='NCBI-accession')
@@ -20,3 +21,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
