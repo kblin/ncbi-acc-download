@@ -56,20 +56,9 @@ class Config(object):
 
 def download_from_ncbi(dl_id, config, filename=None):
     """Download a single ID from NCBI and store it to a file."""
-    # types: string, string -> None
-    params = dict(tool='antiSMASH', retmode='text')
+    # types: string, Config, string -> None
 
-    # delete / characters and as NCBI ignores IDs after #, do the same.
-    params['id'] = dl_id
-
-    params['db'] = config.molecule
-
-    if config.molecule == 'nucleotide':
-        params['rettype'] = 'gbwithparts'
-        file_ending = ".gbk"
-    else:
-        params['rettype'] = 'fasta'
-        file_ending = ".fa"
+    params, file_ending = _build_params(dl_id, config)
 
     try:
         r = requests.get(NCBI_URL, params=params, stream=True)
@@ -100,4 +89,22 @@ def download_from_ncbi(dl_id, config, filename=None):
             fh.write(chunk)
     if config.verbose:
         print('', file=sys.stderr)
+
+
+def _build_params(dl_id, config):
+    params = dict(tool='ncbi-acc-download', retmode='text')
+
+    # delete / characters and as NCBI ignores IDs after #, do the same.
+    params['id'] = dl_id
+
+    params['db'] = config.molecule
+
+    if config.molecule == 'nucleotide':
+        params['rettype'] = 'gbwithparts'
+        file_ending = ".gbk"
+    else:
+        params['rettype'] = 'fasta'
+        file_ending = ".fa"
+
+    return params, file_ending
 

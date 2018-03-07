@@ -34,3 +34,35 @@ def test_download_from_ncbi(req, tmpdir):
 
     assert expected.check()
 
+
+def test_build_params():
+    """Test we build the right set of parameters."""
+    config = core.Config(molecule='nucleotide', verbose=False)
+    dl_id = 'TEST'
+    expected_params = {
+        'tool': 'ncbi-acc-download',
+        'retmode': 'text',
+        'rettype': 'gbwithparts',
+        'id': 'TEST',
+        'db': 'nucleotide'
+    }
+
+    params, file_ending = core._build_params(dl_id, config)
+
+    assert params == expected_params
+    assert file_ending == '.gbk'
+
+    expected_params = {
+        'tool': 'ncbi-acc-download',
+        'retmode': 'text',
+        'rettype': 'fasta',
+        'id': 'TEST',
+        'db': 'protein'
+    }
+    config.molecule = 'protein'
+
+    params, file_ending = core._build_params(dl_id, config)
+
+    assert params == expected_params
+    assert file_ending == '.fa'
+
