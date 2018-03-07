@@ -47,10 +47,9 @@ def test_build_params():
         'db': 'nucleotide'
     }
 
-    params, file_ending = core._build_params(dl_id, config)
+    params = core._build_params(dl_id, config)
 
     assert params == expected_params
-    assert file_ending == '.gbk'
 
     expected_params = {
         'tool': 'ncbi-acc-download',
@@ -61,19 +60,19 @@ def test_build_params():
     }
     config.molecule = 'protein'
 
-    params, file_ending = core._build_params(dl_id, config)
+    params = core._build_params(dl_id, config)
 
     assert params == expected_params
-    assert file_ending == '.fa'
 
 
 def test_generate_filename():
     """Test output file name generation."""
-    params = dict(id='TEST')
+    params = dict(id='TEST', db='nucleotide')
 
-    filename = core._generate_filename(params, 'foo', '.gbk')
+    filename = core._generate_filename(params, 'foo')
     assert filename == 'foo.gbk'
 
-    filename = core._generate_filename(params, None, '.fa')
+    params['db'] = 'protein'
+    filename = core._generate_filename(params, None)
     assert filename == 'TEST.fa'
 

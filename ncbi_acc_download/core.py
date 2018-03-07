@@ -58,7 +58,7 @@ def download_from_ncbi(dl_id, config, filename=None):
     """Download a single ID from NCBI and store it to a file."""
     # types: string, Config, string -> None
 
-    params, file_ending = _build_params(dl_id, config)
+    params = _build_params(dl_id, config)
 
     try:
         r = requests.get(NCBI_URL, params=params, stream=True)
@@ -70,7 +70,7 @@ def download_from_ncbi(dl_id, config, filename=None):
         print("Failed to download file with id {} from NCBI".format(dl_id), file=sys.stderr)
         raise Exception("Download failed")
 
-    outfile_name = _generate_filename(params, filename, file_ending)
+    outfile_name = _generate_filename(params, filename)
 
     with open(outfile_name, 'wb') as fh:
         # use a chunk size of 4k, as that's what most filesystems use these days
@@ -97,16 +97,19 @@ def _build_params(dl_id, config):
 
     if config.molecule == 'nucleotide':
         params['rettype'] = 'gbwithparts'
-        file_ending = ".gbk"
     else:
         params['rettype'] = 'fasta'
-        file_ending = ".fa"
 
-    return params, file_ending
+    return params
 
 
-def _generate_filename(params, filename, file_ending):
+def _generate_filename(params, filename):
     safe_ids = params['id'][:20].replace(' ', '_')
+    file_ending = '.fa'
+
+    if params['db'] == 'nucleotide':
+        file_ending = '.gbk'
+
     if filename:
         outfile_name = "{filename}{ending}".format(filename=filename, ending=file_ending)
     else:
