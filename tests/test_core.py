@@ -66,3 +66,14 @@ def test_build_params():
     assert params == expected_params
     assert file_ending == '.fa'
 
+
+def test_generate_filename():
+    """Test output file name generation."""
+    params = dict(id='TEST')
+
+    filename = core._generate_filename(params, 'foo', '.gbk')
+    assert filename == 'foo.gbk'
+
+    filename = core._generate_filename(params, None, '.fa')
+    assert filename == 'TEST.fa'
+

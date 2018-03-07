@@ -70,11 +70,7 @@ def download_from_ncbi(dl_id, config, filename=None):
         print("Failed to download file with id {} from NCBI".format(dl_id), file=sys.stderr)
         raise Exception("Download failed")
 
-    safe_ids = params['id'][:20].replace(' ', '_')
-    if filename:
-        outfile_name = "{filename}{ending}".format(filename=filename, ending=file_ending)
-    else:
-        outfile_name = "{ncbi_id}{ending}".format(ncbi_id=safe_ids, ending=file_ending)
+    outfile_name = _generate_filename(params, filename, file_ending)
 
     with open(outfile_name, 'wb') as fh:
         # use a chunk size of 4k, as that's what most filesystems use these days
@@ -107,4 +103,14 @@ def _build_params(dl_id, config):
         file_ending = ".fa"
 
     return params, file_ending
+
+
+def _generate_filename(params, filename, file_ending):
+    safe_ids = params['id'][:20].replace(' ', '_')
+    if filename:
+        outfile_name = "{filename}{ending}".format(filename=filename, ending=file_ending)
+    else:
+        outfile_name = "{ncbi_id}{ending}".format(ncbi_id=safe_ids, ending=file_ending)
+
+    return outfile_name
 
