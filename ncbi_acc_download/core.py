@@ -75,7 +75,7 @@ def download_to_file(dl_id, config, filename=None):
     """Download a single ID from NCBI and store it to a file."""
     # types: string, Config, string -> None
 
-    params = _build_params(dl_id, config)
+    params = build_params(dl_id, config)
 
     r = get_stream(params)
     outfile_name = _generate_filename(params, filename)
@@ -100,7 +100,8 @@ def get_stream(params):
     return r
 
 
-def _build_params(dl_id, config):
+def build_params(dl_id, config):
+    """Build the query parameters for the Entrez query."""
     params = dict(tool='ncbi-acc-download', retmode='text')
 
     # delete / characters and as NCBI ignores IDs after #, do the same.

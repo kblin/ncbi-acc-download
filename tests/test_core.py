@@ -54,7 +54,7 @@ def test_build_params():
         'db': 'nucleotide'
     }
 
-    params = core._build_params(dl_id, config)
+    params = core.build_params(dl_id, config)
 
     assert params == expected_params
 
@@ -67,7 +67,7 @@ def test_build_params():
     }
     config.molecule = 'protein'
 
-    params = core._build_params(dl_id, config)
+    params = core.build_params(dl_id, config)
 
     assert params == expected_params
 
