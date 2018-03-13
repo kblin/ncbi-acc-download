@@ -77,21 +77,27 @@ def download_to_file(dl_id, config, filename=None):
 
     params = _build_params(dl_id, config)
 
-    try:
-        r = requests.get(NCBI_URL, params=params, stream=True)
-    except (requests.exceptions.RequestException, IncompleteRead) as e:
-        print("Failed to download {!r} from NCBI".format(dl_id), file=sys.stderr)
-        raise DownloadError(str(e))
-
-    if r.status_code != requests.codes.ok:
-        print("Failed to download file with id {} from NCBI".format(dl_id), file=sys.stderr)
-        raise DownloadError("Download failed with return code: {}".format(r.status_code))
-
+    r = get_stream(params)
     outfile_name = _generate_filename(params, filename)
 
     with open(outfile_name, 'wb') as fh:
         # use a chunk size of 4k, as that's what most filesystems use these days
         _validate_and_write(r, fh, dl_id, config.emit)
+
+
+def get_stream(params):
+    """Get the actual streamed request from NCBI."""
+    try:
+        r = requests.get(NCBI_URL, params=params, stream=True)
+    except (requests.exceptions.RequestException, IncompleteRead) as e:
+        print("Failed to download {!r} from NCBI".format(params['id']), file=sys.stderr)
+        raise DownloadError(str(e))
+
+    if r.status_code != requests.codes.ok:
+        print("Failed to download file with id {} from NCBI".format(params['id']), file=sys.stderr)
+        raise DownloadError("Download failed with return code: {}".format(r.status_code))
+
+    return r
 
 
 def _build_params(dl_id, config):

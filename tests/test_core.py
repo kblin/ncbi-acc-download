@@ -104,3 +104,19 @@ def test_validate_and_write_emit(req):
 
     assert output.getvalue() == u'.\n'
     assert handle.getvalue() == b'This is a sequence file, honest.'
+
+
+def test_get_stream_exception(req):
+    """Test getting a download stream handles exceptions."""
+    req.get(core.NCBI_URL, exc=requests.exceptions.RequestException)
+    params = dict(id='FAKE')
+    with pytest.raises(core.DownloadError):
+        core.get_stream(params)
+
+
+def test_get_stream_bad_status(req):
+    """Test getting a download stream handles bad status codes."""
+    req.get(core.NCBI_URL, text=u'Nope!', status_code=404)
+    params = dict(id='FAKE')
+    with pytest.raises(core.DownloadError):
+        core.get_stream(params)
