@@ -3,7 +3,7 @@
 
 from argparse import ArgumentParser, SUPPRESS
 
-from .core import download_from_ncbi, Config
+from .core import download_to_file, Config
 
 
 def main():
@@ -26,7 +26,7 @@ def main():
         filename = None
         if 'out' in opts:
             filename = "{fn}_{i}".format(fn=opts.out, i=i)
-        download_from_ncbi(dl_id, config, filename)
+        download_to_file(dl_id, config, filename)
 
 
 if __name__ == "__main__":

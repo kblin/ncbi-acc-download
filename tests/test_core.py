@@ -24,7 +24,7 @@ def test_config():
     assert config.molecule == 'nucleotide'
 
 
-def test_download_from_ncbi(req, tmpdir):
+def test_download_to_file(req, tmpdir):
     """Test downloading things from NCBI."""
     req.get(core.NCBI_URL, text='This works.')
     outdir = tmpdir.mkdir('outdir')
@@ -32,7 +32,7 @@ def test_download_from_ncbi(req, tmpdir):
     expected = outdir.join('foo.gbk')
     config = core.Config(molecule='nucleotide', verbose=False)
 
-    core.download_from_ncbi('FOO', config, filename=filename)
+    core.download_to_file('FOO', config, filename=filename)
 
     assert expected.check()
 

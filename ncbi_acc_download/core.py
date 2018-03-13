@@ -71,7 +71,7 @@ class Config(object):
         return config
 
 
-def download_from_ncbi(dl_id, config, filename=None):
+def download_to_file(dl_id, config, filename=None):
     """Download a single ID from NCBI and store it to a file."""
     # types: string, Config, string -> None
 
