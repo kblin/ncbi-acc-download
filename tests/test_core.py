@@ -23,6 +23,11 @@ def test_config():
     assert config.verbose is False
     assert config.molecule == 'nucleotide'
 
+    args = Namespace(molecule="protein", verbose=True)
+    config = core.Config.from_args(args)
+    assert config.verbose is True
+    assert config.molecule == 'protein'
+
 
 def test_download_to_file(req, tmpdir):
     """Test downloading things from NCBI."""
@@ -87,6 +92,7 @@ def test_validate_and_write_error_pattern_raises(req):
 
     with pytest.raises(core.BadPatternError):
         core._validate_and_write(r, handle, 'FAKE', lambda x: x)
+
 
 def test_validate_and_write_emit(req):
     """Test writing prints dots in verbose mode."""
