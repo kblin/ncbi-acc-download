@@ -158,11 +158,11 @@ def _generate_filename(params, filename):
 
 def _validate_and_write(request, handle, dl_id, emit_func):
     for chunk in request.iter_content(4096, decode_unicode=True):
-        emit_func('.')
+        emit_func(u'.')
         for pattern in ERROR_PATTERNS:
             if pattern in chunk:
                 raise BadPatternError("Failed to download file with id {} from NCBI: {}".format(
                     dl_id, pattern))
 
         handle.write(chunk)
-    emit_func('\n')
+    emit_func(u'\n')
