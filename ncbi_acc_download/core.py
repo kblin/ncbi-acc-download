@@ -13,6 +13,7 @@
 # limitations under the License.
 """Core functions of the ncbi-by-accession downloader."""
 from __future__ import print_function
+import functools
 import requests
 import sys
 try:
@@ -34,10 +35,23 @@ ERROR_PATTERNS = (
 )
 
 
+class DownloadError(RuntimeError):
+    """Base error for all problems when downloading from NCBI."""
+
+    pass
+
+
+class BadPatternError(DownloadError):
+    """Error thrown when download file contains an error pattern."""
+
+    pass
+
+
 class Config(object):
     """NCBI genome download configuration."""
 
     __slots__ = (
+        'emit',
         'molecule',
         'verbose',
     )
@@ -46,6 +60,9 @@ class Config(object):
         """Initialise the config from scratch."""
         self.molecule = molecule
         self.verbose = verbose
+        self.emit = lambda x: x
+        if verbose:
+            self.emit = functools.partial(print, file=sys.stderr, end='', flush=True)
 
     @classmethod
     def from_args(cls, args):
@@ -64,27 +81,17 @@ def download_from_ncbi(dl_id, config, filename=None):
         r = requests.get(NCBI_URL, params=params, stream=True)
     except (requests.exceptions.RequestException, IncompleteRead) as e:
         print("Failed to download {!r} from NCBI".format(dl_id), file=sys.stderr)
-        raise
+        raise DownloadError(str(e))
 
     if r.status_code != requests.codes.ok:
         print("Failed to download file with id {} from NCBI".format(dl_id), file=sys.stderr)
-        raise Exception("Download failed")
+        raise DownloadError("Download failed with return code: {}".format(r.status_code))
 
     outfile_name = _generate_filename(params, filename)
 
     with open(outfile_name, 'wb') as fh:
         # use a chunk size of 4k, as that's what most filesystems use these days
-        for chunk in r.iter_content(4096):
-            if config.verbose:
-                print('.', end='', file=sys.stderr, flush=True)
-            for pattern in ERROR_PATTERNS:
-                if pattern in chunk:
-                    raise Exception("Failed to download file with id {} from NCBI: {}".format(
-                        params['id'], pattern))
-
-            fh.write(chunk)
-    if config.verbose:
-        print('', file=sys.stderr)
+        _validate_and_write(r, fh, dl_id, config.emit)
 
 
 def _build_params(dl_id, config):
@@ -117,3 +124,14 @@ def _generate_filename(params, filename):
 
     return outfile_name
 
+
+def _validate_and_write(request, handle, dl_id, emit_func):
+    for chunk in request.iter_content(4096):
+        emit_func('.')
+        for pattern in ERROR_PATTERNS:
+            if pattern in chunk:
+                raise BadPatternError("Failed to download file with id {} from NCBI: {}".format(
+                    dl_id, pattern))
+
+        handle.write(chunk)
+    emit_func('\n')

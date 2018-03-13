@@ -1,7 +1,9 @@
 """Tests for the core module."""
 
 from argparse import Namespace
+from io import BytesIO, StringIO
 import pytest
+import requests
 import requests_mock
 
 from ncbi_acc_download import core
@@ -76,3 +78,23 @@ def test_generate_filename():
     filename = core._generate_filename(params, None)
     assert filename == 'TEST.fa'
 
+
+def test_validate_and_write_error_pattern_raises(req):
+    """Test scanning the download file for error patterns."""
+    handle = BytesIO()
+    req.get('http://fake/', text=u'ID list is empty')
+    r = requests.get('http://fake/')
+
+    with pytest.raises(core.BadPatternError):
+        core._validate_and_write(r, handle, 'FAKE', lambda x: x)
+
+def test_validate_and_write_emit(req):
+    """Test writing prints dots in verbose mode."""
+    handle = BytesIO()
+    req.get('http://fake/', text=u'This is a sequence file, honest.')
+    r = requests.get('http://fake/')
+    output = StringIO()
+    core._validate_and_write(r, handle, 'FAKE', output.write)
+
+    assert output.getvalue() == u'.\n'
+    assert handle.getvalue() == b'This is a sequence file, honest.'
