@@ -1,7 +1,7 @@
 """Tests for the core module."""
 
 from argparse import Namespace
-from io import BytesIO, StringIO
+from io import StringIO
 import pytest
 import requests
 import requests_mock
@@ -104,7 +104,7 @@ def test_generate_filename():
 
 def test_validate_and_write_error_pattern_raises(req):
     """Test scanning the download file for error patterns."""
-    handle = BytesIO()
+    handle = StringIO()
     req.get('http://fake/', text=u'ID list is empty')
     r = requests.get('http://fake/')
 
@@ -114,14 +114,14 @@ def test_validate_and_write_error_pattern_raises(req):
 
 def test_validate_and_write_emit(req):
     """Test writing prints dots in verbose mode."""
-    handle = BytesIO()
+    handle = StringIO()
     req.get('http://fake/', text=u'This is a sequence file, honest.')
     r = requests.get('http://fake/')
     output = StringIO()
     core._validate_and_write(r, handle, 'FAKE', output.write)
 
     assert output.getvalue() == u'.\n'
-    assert handle.getvalue() == b'This is a sequence file, honest.'
+    assert handle.getvalue() == u'This is a sequence file, honest.'
 
 
 def test_get_stream_exception(req):

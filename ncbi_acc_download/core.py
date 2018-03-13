@@ -29,14 +29,14 @@ except ImportError:  # pragma: no cover
 
 NCBI_URL = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi'
 ERROR_PATTERNS = (
-    b'Error reading from remote server',
-    b'Bad gateway',
-    b'Cannot process ID list',
-    b'server is temporarily unable to service your request',
-    b'Service unavailable',
-    b'Server Error',
-    b'ID list is empty',
-    b'Resource temporarily unavailable',
+    u'Error reading from remote server',
+    u'Bad gateway',
+    u'Cannot process ID list',
+    u'server is temporarily unable to service your request',
+    u'Service unavailable',
+    u'Server Error',
+    u'ID list is empty',
+    u'Resource temporarily unavailable',
 )
 
 
@@ -104,7 +104,7 @@ def download_to_file(dl_id, config, filename=None):
     r = get_stream(params)
     outfile_name = _generate_filename(params, filename)
 
-    with open(outfile_name, 'wb') as fh:
+    with open(outfile_name, 'w') as fh:
         # use a chunk size of 4k, as that's what most filesystems use these days
         _validate_and_write(r, fh, dl_id, config.emit)
 
@@ -157,7 +157,7 @@ def _generate_filename(params, filename):
 
 
 def _validate_and_write(request, handle, dl_id, emit_func):
-    for chunk in request.iter_content(4096):
+    for chunk in request.iter_content(4096, decode_unicode=True):
         emit_func('.')
         for pattern in ERROR_PATTERNS:
             if pattern in chunk:
