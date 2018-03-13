@@ -22,11 +22,29 @@ def test_config():
     config = core.Config.from_args(args)
     assert config.verbose is False
     assert config.molecule == 'nucleotide'
+    assert config.extended_validation is False
 
     args = Namespace(molecule="protein", verbose=True)
     config = core.Config.from_args(args)
     assert config.verbose is True
     assert config.molecule == 'protein'
+
+
+def test_config_no_biopython(monkeypatch):
+    """Test the correct errors are raised if Biopython is not available."""
+    monkeypatch.setattr(core, 'HAVE_BIOPYTHON', False)
+    assert core.HAVE_BIOPYTHON is False
+    args = Namespace(extended_validation=True)
+    with pytest.raises(ValueError):
+        core.Config.from_args(args)
+
+
+def test_config_have_biopython():
+    """Test we detect Biopython."""
+    assert core.HAVE_BIOPYTHON
+    args = Namespace(extended_validation=True)
+    config = core.Config.from_args(args)
+    assert config.extended_validation
 
 
 def test_download_to_file(req, tmpdir):

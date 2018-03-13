@@ -20,6 +20,11 @@ try:
     from httplib import IncompleteRead
 except ImportError:
     from http.client import IncompleteRead
+try:
+    from Bio import SeqIO
+    HAVE_BIOPYTHON = True
+except ImportError:  # pragma: no cover
+    HAVE_BIOPYTHON = False
 
 
 NCBI_URL = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi'
@@ -52,27 +57,41 @@ class Config(object):
 
     __slots__ = (
         'emit',
+        '_extended_validation',
         'molecule',
         'verbose',
     )
 
-    def __init__(self, molecule, verbose):
+    # TODO: once python2 support can be dropped, switch to explicit argnames + * to drop extra args
+    def __init__(self, **kwargs):
         """Initialise the config from scratch."""
-        self.molecule = molecule
-        self.verbose = verbose
+        self.extended_validation = kwargs.get('extended_validation', False)
+        self.molecule = kwargs.get('molecule', 'nucleotide')
+        self.verbose = kwargs.get('verbose', False)
 
         def noop(arg):
             """Don't do anything."""
             pass
 
         self.emit = noop
-        if verbose:
+        if self.verbose:
             self.emit = functools.partial(print, file=sys.stderr, end='', flush=True)
+
+    @property
+    def extended_validation(self):
+        """Get the extended validation setting."""
+        return self._extended_validation
+
+    @extended_validation.setter
+    def extended_validation(self, value):
+        if value and not HAVE_BIOPYTHON:
+            raise ValueError("Asked for extended validation, but Biopython not available")
+        self._extended_validation = value
 
     @classmethod
     def from_args(cls, args):
         """Initialise from argpase.Namespace object."""
-        config = cls(args.molecule, args.verbose)
+        config = cls(**args.__dict__)
         return config
 
 

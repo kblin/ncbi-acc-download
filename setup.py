@@ -31,6 +31,10 @@ tests_require = [
     'pytest-mock',
 ]
 
+validate_require = [
+    'biopython',
+]
+
 
 def read_version():
     for line in open(os.path.join('ncbi_acc_download', '__init__.py'), 'r'):
@@ -79,5 +83,6 @@ setup(
     ],
     extras_require={
         'testing': tests_require,
+        'validate': validate_require,
     },
 )

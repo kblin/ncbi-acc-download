@@ -3,7 +3,7 @@
 
 from argparse import ArgumentParser, SUPPRESS
 
-from .core import download_to_file, Config
+from .core import download_to_file, Config, HAVE_BIOPYTHON
 
 
 def main():
@@ -13,6 +13,9 @@ def main():
     parser.add_argument('ids', nargs='+', metavar='NCBI-accession')
     parser.add_argument('-m', '--molecule', default="nucleotide", choices=["nucleotide", "protein"],
                         help="Molecule type to download. Default: %(default)s")
+    if HAVE_BIOPYTHON:
+        parser.add_argument('-e', '--extended-validation', action="store_true", default=False,
+                            help="Perform extended validation.")
     parser.add_argument('-o', '--out', default=SUPPRESS,
                         help="Base filename to use for output files. By default, use the NCBI ID.")
     parser.add_argument('-v', '--verbose', action="store_true", default=False,
