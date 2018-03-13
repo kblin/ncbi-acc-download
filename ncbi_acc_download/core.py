@@ -60,7 +60,12 @@ class Config(object):
         """Initialise the config from scratch."""
         self.molecule = molecule
         self.verbose = verbose
-        self.emit = lambda x: x
+
+        def noop(arg):
+            """Don't do anything."""
+            pass
+
+        self.emit = noop
         if verbose:
             self.emit = functools.partial(print, file=sys.stderr, end='', flush=True)
 
