@@ -31,12 +31,15 @@ NCBI_URL = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi'
 ERROR_PATTERNS = (
     u'Error reading from remote server',
     u'Bad gateway',
+    u'Bad Gateway',
     u'Cannot process ID list',
     u'server is temporarily unable to service your request',
     u'Service unavailable',
     u'Server Error',
     u'ID list is empty',
     u'Resource temporarily unavailable',
+    u'Failed to retrieve sequence',
+    u'Failed to understand id',
 )
 
 
