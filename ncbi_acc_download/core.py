@@ -14,17 +14,14 @@
 """Core functions of the ncbi-by-accession downloader."""
 from __future__ import print_function
 import functools
+from io import StringIO
 import requests
 import sys
 try:
     from httplib import IncompleteRead
 except ImportError:
     from http.client import IncompleteRead
-try:
-    from Bio import SeqIO
-    HAVE_BIOPYTHON = True
-except ImportError:  # pragma: no cover
-    HAVE_BIOPYTHON = False
+from ncbi_acc_download.validate import HAVE_BIOPYTHON, run_extended_validation, VALIDATION_LEVELS
 
 
 NCBI_URL = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi'
@@ -55,6 +52,12 @@ class BadPatternError(DownloadError):
     pass
 
 
+class ValidationError(DownloadError):
+    """Error thrown when download file failes extended validation."""
+
+    pass
+
+
 class Config(object):
     """NCBI genome download configuration."""
 
@@ -68,7 +71,7 @@ class Config(object):
     # TODO: once python2 support can be dropped, switch to explicit argnames + * to drop extra args
     def __init__(self, **kwargs):
         """Initialise the config from scratch."""
-        self.extended_validation = kwargs.get('extended_validation', False)
+        self.extended_validation = kwargs.get('extended_validation', 'none')
         self.molecule = kwargs.get('molecule', 'nucleotide')
         self.verbose = kwargs.get('verbose', False)
 
@@ -87,8 +90,10 @@ class Config(object):
 
     @extended_validation.setter
     def extended_validation(self, value):
-        if value and not HAVE_BIOPYTHON:
+        if value != 'none' and not HAVE_BIOPYTHON:
             raise ValueError("Asked for extended validation, but Biopython not available")
+        if value not in VALIDATION_LEVELS:
+            raise ValueError("Invalid validation level {}".format(value))
         self._extended_validation = value
 
     @classmethod
@@ -109,7 +114,7 @@ def download_to_file(dl_id, config, filename=None):
 
     with open(outfile_name, 'w') as fh:
         # use a chunk size of 4k, as that's what most filesystems use these days
-        _validate_and_write(r, fh, dl_id, config.emit)
+        _validate_and_write(r, fh, dl_id, config)
 
 
 def get_stream(params):
@@ -159,13 +164,30 @@ def _generate_filename(params, filename):
     return outfile_name
 
 
-def _validate_and_write(request, handle, dl_id, emit_func):
+def _validate_and_write(request, orig_handle, dl_id, config):
+    if config.extended_validation != 'none':
+        handle = StringIO()
+    else:
+        handle = orig_handle
+
     for chunk in request.iter_content(4096, decode_unicode=True):
-        emit_func(u'.')
+        config.emit(u'.')
         for pattern in ERROR_PATTERNS:
             if pattern in chunk:
                 raise BadPatternError("Failed to download file with id {} from NCBI: {}".format(
                     dl_id, pattern))
 
         handle.write(chunk)
-    emit_func(u'\n')
+    config.emit(u'\n')
+
+    if config.extended_validation == 'none':
+        return
+
+    if config.molecule == 'nucleotide':
+        file_format = "genbank"
+    else:
+        file_format = "fasta"
+
+    if not run_extended_validation(handle, file_format, config.extended_validation):
+        raise ValidationError("Sequence(s) downloaded for {} failed to load.".format(dl_id))
+    orig_handle.write(handle.getvalue())

@@ -14,8 +14,11 @@ def main():
     parser.add_argument('-m', '--molecule', default="nucleotide", choices=["nucleotide", "protein"],
                         help="Molecule type to download. Default: %(default)s")
     if HAVE_BIOPYTHON:
-        parser.add_argument('-e', '--extended-validation', action="store_true", default=False,
-                            help="Perform extended validation.")
+        parser.add_argument('-e', '--extended-validation', action="store", default='none',
+                            choices=('none', 'loads', 'all'),
+                            help="Perform extended validation. Possible options are 'none' to skip validation, "
+                                 "'loads' to check if the sequence file loads in Biopython, "
+                                 "or 'all' to run all checks. Default: %(default)s")
     parser.add_argument('-o', '--out', default=SUPPRESS,
                         help="Base filename to use for output files. By default, use the NCBI ID.")
     parser.add_argument('-v', '--verbose', action="store_true", default=False,

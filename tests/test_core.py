@@ -22,7 +22,7 @@ def test_config():
     config = core.Config.from_args(args)
     assert config.verbose is False
     assert config.molecule == 'nucleotide'
-    assert config.extended_validation is False
+    assert config.extended_validation == 'none'
 
     args = Namespace(molecule="protein", verbose=True)
     config = core.Config.from_args(args)
@@ -34,7 +34,7 @@ def test_config_no_biopython(monkeypatch):
     """Test the correct errors are raised if Biopython is not available."""
     monkeypatch.setattr(core, 'HAVE_BIOPYTHON', False)
     assert core.HAVE_BIOPYTHON is False
-    args = Namespace(extended_validation=True)
+    args = Namespace(extended_validation='all')
     with pytest.raises(ValueError):
         core.Config.from_args(args)
 
@@ -42,9 +42,9 @@ def test_config_no_biopython(monkeypatch):
 def test_config_have_biopython():
     """Test we detect Biopython."""
     assert core.HAVE_BIOPYTHON
-    args = Namespace(extended_validation=True)
+    args = Namespace(extended_validation='all')
     config = core.Config.from_args(args)
-    assert config.extended_validation
+    assert config.extended_validation == 'all'
 
 
 def test_download_to_file(req, tmpdir):
@@ -107,9 +107,10 @@ def test_validate_and_write_error_pattern_raises(req):
     handle = StringIO()
     req.get('http://fake/', text=u'ID list is empty')
     r = requests.get('http://fake/')
+    config = core.Config()
 
     with pytest.raises(core.BadPatternError):
-        core._validate_and_write(r, handle, 'FAKE', lambda x: x)
+        core._validate_and_write(r, handle, 'FAKE', config)
 
 
 def test_validate_and_write_emit(req):
@@ -118,10 +119,23 @@ def test_validate_and_write_emit(req):
     req.get('http://fake/', text=u'This is a sequence file, honest.')
     r = requests.get('http://fake/')
     output = StringIO()
-    core._validate_and_write(r, handle, 'FAKE', output.write)
+    config = core.Config()
+    config.emit = output.write
+    core._validate_and_write(r, handle, 'FAKE', config)
 
     assert output.getvalue() == u'.\n'
     assert handle.getvalue() == u'This is a sequence file, honest.'
+
+
+def test_validate_and_write_extended_validation(req):
+    """Test extended validation before writing."""
+    handle = StringIO()
+    req.get('http://fake/', text=u'>foo\nMAGIC')
+    r = requests.get('http://fake/')
+    config = core.Config(extended_validation='loads', molecule='protein')
+    core._validate_and_write(r, handle, 'FAKE', config)
+
+    assert handle.getvalue() == u'>foo\nMAGIC'
 
 
 def test_get_stream_exception(req):
