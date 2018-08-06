@@ -18,7 +18,6 @@ def run_extended_validation(handle, file_format, validation_level):
     if not HAVE_BIOPYTHON:
         return False
     # we wrote to the handle, so rewind it
-    print(handle.getvalue())
     handle.seek(0)
     try:
         processed_seq = False
