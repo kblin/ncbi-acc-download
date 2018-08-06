@@ -118,7 +118,6 @@ def download_to_file(dl_id, config, filename=None):
     outfile_name = _generate_filename(params, filename)
 
     with open(outfile_name, 'w') as fh:
-        # use a chunk size of 4k, as that's what most filesystems use these days
         _validate_and_write(r, fh, dl_id, config)
 
 
@@ -175,6 +174,7 @@ def _validate_and_write(request, orig_handle, dl_id, config):
     else:
         handle = orig_handle
 
+    # use a chunk size of 4k, as that's what most filesystems use these days
     for chunk in request.iter_content(4096, decode_unicode=True):
         config.emit(u'.')
         for pattern in ERROR_PATTERNS:
