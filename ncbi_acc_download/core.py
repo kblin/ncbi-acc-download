@@ -64,6 +64,7 @@ class Config(object):
     __slots__ = (
         'emit',
         '_extended_validation',
+        'format',
         'molecule',
         'verbose',
     )
@@ -73,6 +74,10 @@ class Config(object):
         """Initialise the config from scratch."""
         self.extended_validation = kwargs.get('extended_validation', 'none')
         self.molecule = kwargs.get('molecule', 'nucleotide')
+        if self.molecule == 'nucleotide':
+            self.format = kwargs.get('format', 'genbank')
+        else:
+            self.format = 'fasta'
         self.verbose = kwargs.get('verbose', False)
 
         def noop(arg):
@@ -141,7 +146,7 @@ def build_params(dl_id, config):
 
     params['db'] = config.molecule
 
-    if config.molecule == 'nucleotide':
+    if config.molecule == 'nucleotide' and config.format == 'genbank':
         params['rettype'] = 'gbwithparts'
     else:
         params['rettype'] = 'fasta'
@@ -153,7 +158,7 @@ def _generate_filename(params, filename):
     safe_ids = params['id'][:20].replace(' ', '_')
     file_ending = '.fa'
 
-    if params['db'] == 'nucleotide':
+    if params['rettype'] == 'gbwithparts':
         file_ending = '.gbk'
 
     if filename:
@@ -183,11 +188,6 @@ def _validate_and_write(request, orig_handle, dl_id, config):
     if config.extended_validation == 'none':
         return
 
-    if config.molecule == 'nucleotide':
-        file_format = "genbank"
-    else:
-        file_format = "fasta"
-
-    if not run_extended_validation(handle, file_format, config.extended_validation):
+    if not run_extended_validation(handle, config.format, config.extended_validation):
         raise ValidationError("Sequence(s) downloaded for {} failed to load.".format(dl_id))
     orig_handle.write(handle.getvalue())
