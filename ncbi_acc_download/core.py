@@ -115,6 +115,7 @@ def download_to_file(dl_id, config, filename=None):
     params = build_params(dl_id, config)
 
     r = get_stream(params)
+    config.emit("Downloading {}\n".format(r.url))
     outfile_name = _generate_filename(params, filename)
 
     with open(outfile_name, 'w') as fh:
