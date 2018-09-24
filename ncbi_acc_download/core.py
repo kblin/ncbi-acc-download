@@ -21,6 +21,10 @@ try:
     from httplib import IncompleteRead
 except ImportError:
     from http.client import IncompleteRead
+try:
+    from urllib import urlencode
+except ImportError:
+    from urllib.parse import urlencode
 from ncbi_acc_download.validate import HAVE_BIOPYTHON, run_extended_validation, VALIDATION_LEVELS
 
 
@@ -120,6 +124,18 @@ def download_to_file(dl_id, config, filename=None):
 
     with open(outfile_name, 'w') as fh:
         _validate_and_write(r, fh, dl_id, config)
+
+
+def generate_url(dl_id, config):
+    """Generate the Entrez URL to download a file using a separate tool"""
+    # types: string, Config -> string
+
+    params = build_params(dl_id, config)
+
+    # remove the tool field, some other tool will do the download
+    del params['tool']
+    encoded_params = urlencode(params, doseq=True)
+    return "?".join([NCBI_URL, encoded_params])
 
 
 def get_stream(params):

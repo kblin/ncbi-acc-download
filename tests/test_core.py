@@ -168,3 +168,10 @@ def test_get_stream_bad_status(req):
     params = dict(id='FAKE')
     with pytest.raises(core.DownloadError):
         core.get_stream(params)
+
+
+def test_generate_url():
+    """Test URL generation."""
+    config = core.Config()
+    expected = "{}?{}".format(core.NCBI_URL, "retmode=text&id=FAKE&db=nucleotide&rettype=gbwithparts")
+    assert expected == core.generate_url("FAKE", config)

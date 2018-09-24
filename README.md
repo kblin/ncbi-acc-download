@@ -46,6 +46,11 @@ To download a protein record WP_12345 in FASTA format, run
 ncbi-acc-download --molecule protein WP_12345
 ```
 
+To just generate a list of download URLs to run the actual download elsewhere, run
+```
+ncbi-acc-download --url AB_12345
+```
+
 To get an overview of all options, run
 ```
 ncbi-acc-download --help

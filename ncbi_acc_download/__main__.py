@@ -3,7 +3,7 @@
 
 from argparse import ArgumentParser, SUPPRESS
 
-from .core import download_to_file, Config, HAVE_BIOPYTHON
+from .core import download_to_file, generate_url, Config, HAVE_BIOPYTHON
 
 
 def main():
@@ -24,6 +24,8 @@ def main():
                         help="File format to download nucleotide sequences in. Default: %(default)s")
     parser.add_argument('-o', '--out', default=SUPPRESS,
                         help="Base filename to use for output files. By default, use the NCBI ID.")
+    parser.add_argument('--url', action="store_true", default=False,
+                        help="Instead of downloading the sequences, just print the URLs to stdout.")
     parser.add_argument('-v', '--verbose', action="store_true", default=False,
                         help="Print a progress indicator.")
 
@@ -35,7 +37,10 @@ def main():
         filename = None
         if 'out' in opts:
             filename = "{fn}_{i}".format(fn=opts.out, i=i)
-        download_to_file(dl_id, config, filename)
+        if opts.url:
+            print(generate_url(dl_id, config))
+        else:
+            download_to_file(dl_id, config, filename)
 
 
 if __name__ == "__main__":
