@@ -6,7 +6,7 @@ import logging
 try:
     from Bio import SeqIO
     HAVE_BIOPYTHON = True
-except ImportWarning:  # pragma: no cover
+except ImportError:  # pragma: no cover
     HAVE_BIOPYTHON = False
 
 
