@@ -88,6 +88,21 @@ def test_build_params():
     params = core.build_params(dl_id, config)
 
     assert params == expected_params
+
+    expected_params = {
+        'tool': 'ncbi-acc-download',
+        'retmode': 'text',
+        'rettype': 'ft',
+        'id': 'TEST',
+        'db': 'nucleotide'
+    }
+
+    config.format = 'featuretable'
+    params = core.build_params(dl_id, config)
+
+    assert params == expected_params
+
+    config = core.Config(molecule='protein', verbose=False)
     expected_params = {
         'tool': 'ncbi-acc-download',
         'retmode': 'text',
@@ -95,7 +110,6 @@ def test_build_params():
         'id': 'TEST',
         'db': 'protein'
     }
-    config.molecule = 'protein'
 
     params = core.build_params(dl_id, config)
 
@@ -113,7 +127,11 @@ def test_generate_filename():
     filename = core._generate_filename(params, 'foo')
     assert filename == 'foo.fa'
 
-    params['db'] = 'protein'
+    params['rettype'] = 'ft'
+    filename = core._generate_filename(params, 'foo')
+    assert filename == 'foo.ft'
+
+    params = dict(id='TEST', db='protein', rettype='fasta')
     filename = core._generate_filename(params, None)
     assert filename == 'TEST.fa'
 

@@ -20,7 +20,7 @@ def main():
                                  "'loads' to check if the sequence file loads in Biopython, "
                                  "or 'all' to run all checks. Default: %(default)s")
     parser.add_argument('-F', '--format', action="store", default='genbank',
-                        choices=('fasta', 'genbank'),
+                        choices=('fasta', 'genbank', 'featuretable'),
                         help="File format to download nucleotide sequences in. Default: %(default)s")
     parser.add_argument('-o', '--out', default=SUPPRESS,
                         help="Base filename to use for output files. By default, use the NCBI ID.")

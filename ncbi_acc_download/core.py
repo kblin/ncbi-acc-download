@@ -162,8 +162,13 @@ def build_params(dl_id, config):
 
     params['db'] = config.molecule
 
-    if config.molecule == 'nucleotide' and config.format == 'genbank':
-        params['rettype'] = 'gbwithparts'
+    if config.molecule == 'nucleotide':
+        if config.format == 'genbank':
+            params['rettype'] = 'gbwithparts'
+        elif config.format == 'featuretable':
+            params['rettype'] = 'ft'
+        else:
+            params['rettype'] = 'fasta'
     else:
         params['rettype'] = 'fasta'
 
@@ -176,6 +181,8 @@ def _generate_filename(params, filename):
 
     if params['rettype'] == 'gbwithparts':
         file_ending = '.gbk'
+    elif params['rettype'] == 'ft':
+        file_ending = '.ft'
 
     if filename:
         outfile_name = "{filename}{ending}".format(filename=filename, ending=file_ending)
