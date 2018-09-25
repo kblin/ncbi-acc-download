@@ -28,7 +28,9 @@ except ImportError:
 from ncbi_acc_download.validate import HAVE_BIOPYTHON, run_extended_validation, VALIDATION_LEVELS
 
 
-NCBI_URL = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi'
+ENTREZ_URL = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi'
+SVIEWER_URL = 'https://eutils.ncbi.nlm.nih.gov/sviewer/viewer.cgi'
+
 ERROR_PATTERNS = (
     u'Error reading from remote server',
     u'Bad gateway',
@@ -116,9 +118,10 @@ def download_to_file(dl_id, config, filename=None):
     """Download a single ID from NCBI and store it to a file."""
     # types: string, Config, string -> None
 
+    url = _get_url_by_format(config)
     params = build_params(dl_id, config)
 
-    r = get_stream(params)
+    r = get_stream(url, params)
     config.emit("Downloading {}\n".format(r.url))
     outfile_name = _generate_filename(params, filename)
 
@@ -130,18 +133,28 @@ def generate_url(dl_id, config):
     """Generate the Entrez URL to download a file using a separate tool"""
     # types: string, Config -> string
 
+    url = _get_url_by_format(config)
     params = build_params(dl_id, config)
 
     # remove the tool field, some other tool will do the download
     del params['tool']
     encoded_params = urlencode(params, doseq=True)
-    return "?".join([NCBI_URL, encoded_params])
+    return "?".join([url, encoded_params])
 
 
-def get_stream(params):
+def _get_url_by_format(config):
+    """Get URL depending on the format."""
+    # types: Config -> string
+
+    if config.format == 'gff3':
+        return SVIEWER_URL
+
+    return ENTREZ_URL
+
+def get_stream(url, params):
     """Get the actual streamed request from NCBI."""
     try:
-        r = requests.get(NCBI_URL, params=params, stream=True)
+        r = requests.get(url, params=params, stream=True)
     except (requests.exceptions.RequestException, IncompleteRead) as e:
         print("Failed to download {!r} from NCBI".format(params['id']), file=sys.stderr)
         raise DownloadError(str(e))
@@ -167,6 +180,8 @@ def build_params(dl_id, config):
             params['rettype'] = 'gbwithparts'
         elif config.format == 'featuretable':
             params['rettype'] = 'ft'
+        elif config.format == 'gff3':
+            params['report'] = 'gff3'
         else:
             params['rettype'] = 'fasta'
     else:
@@ -179,10 +194,12 @@ def _generate_filename(params, filename):
     safe_ids = params['id'][:20].replace(' ', '_')
     file_ending = '.fa'
 
-    if params['rettype'] == 'gbwithparts':
+    if params.get('rettype') == 'gbwithparts':
         file_ending = '.gbk'
-    elif params['rettype'] == 'ft':
+    elif params.get('rettype') == 'ft':
         file_ending = '.ft'
+    elif params.get('report') == 'gff3':
+        file_ending = '.gff'
 
     if filename:
         outfile_name = "{filename}{ending}".format(filename=filename, ending=file_ending)

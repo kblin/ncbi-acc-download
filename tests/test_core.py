@@ -49,7 +49,7 @@ def test_config_have_biopython():
 
 def test_download_to_file(req, tmpdir):
     """Test downloading things from NCBI."""
-    req.get(core.NCBI_URL, text='This works.')
+    req.get(core.ENTREZ_URL, text='This works.')
     outdir = tmpdir.mkdir('outdir')
     filename = outdir.join('foo')
     expected = outdir.join('foo.gbk')
@@ -102,6 +102,19 @@ def test_build_params():
 
     assert params == expected_params
 
+    expected_params = {
+        'tool': 'ncbi-acc-download',
+        'retmode': 'text',
+        'report': 'gff3',
+        'id': 'TEST',
+        'db': 'nucleotide'
+    }
+
+    config.format = 'gff3'
+    params = core.build_params(dl_id, config)
+
+    assert params == expected_params
+
     config = core.Config(molecule='protein', verbose=False)
     expected_params = {
         'tool': 'ncbi-acc-download',
@@ -130,6 +143,11 @@ def test_generate_filename():
     params['rettype'] = 'ft'
     filename = core._generate_filename(params, 'foo')
     assert filename == 'foo.ft'
+
+    del params['rettype']
+    params['report'] = 'gff3'
+    filename = core._generate_filename(params, 'foo')
+    assert filename == 'foo.gff'
 
     params = dict(id='TEST', db='protein', rettype='fasta')
     filename = core._generate_filename(params, None)
@@ -174,22 +192,26 @@ def test_validate_and_write_extended_validation(req):
 
 def test_get_stream_exception(req):
     """Test getting a download stream handles exceptions."""
-    req.get(core.NCBI_URL, exc=requests.exceptions.RequestException)
+    req.get(core.ENTREZ_URL, exc=requests.exceptions.RequestException)
     params = dict(id='FAKE')
     with pytest.raises(core.DownloadError):
-        core.get_stream(params)
+        core.get_stream(core.ENTREZ_URL, params)
 
 
 def test_get_stream_bad_status(req):
     """Test getting a download stream handles bad status codes."""
-    req.get(core.NCBI_URL, text=u'Nope!', status_code=404)
+    req.get(core.ENTREZ_URL, text=u'Nope!', status_code=404)
     params = dict(id='FAKE')
     with pytest.raises(core.DownloadError):
-        core.get_stream(params)
+        core.get_stream(core.ENTREZ_URL, params)
 
 
 def test_generate_url():
     """Test URL generation."""
     config = core.Config()
-    expected = "{}?{}".format(core.NCBI_URL, "retmode=text&id=FAKE&db=nucleotide&rettype=gbwithparts")
+    expected = "{}?{}".format(core.ENTREZ_URL, "retmode=text&id=FAKE&db=nucleotide&rettype=gbwithparts")
+    assert expected == core.generate_url("FAKE", config)
+
+    config.format = 'gff3'
+    expected = "{}?{}".format(core.SVIEWER_URL, "retmode=text&id=FAKE&db=nucleotide&report=gff3")
     assert expected == core.generate_url("FAKE", config)
