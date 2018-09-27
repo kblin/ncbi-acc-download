@@ -23,7 +23,9 @@ def main():
                         choices=('fasta', 'genbank', 'featuretable', 'gff3'),
                         help="File format to download nucleotide sequences in. Default: %(default)s")
     parser.add_argument('-o', '--out', default=SUPPRESS,
-                        help="Base filename to use for output files. By default, use the NCBI ID.")
+                        help="Single filename to use for the combined output.")
+    parser.add_argument('-p', '--prefix', default=SUPPRESS,
+                        help="Filename prefix to use for output files instead of using the NCBI ID.")
     parser.add_argument('--url', action="store_true", default=False,
                         help="Instead of downloading the sequences, just print the URLs to stdout.")
     parser.add_argument('-v', '--verbose', action="store_true", default=False,
@@ -35,12 +37,17 @@ def main():
 
     for i, dl_id in enumerate(opts.ids):
         filename = None
-        if 'out' in opts:
-            filename = "{fn}_{i}".format(fn=opts.out, i=i)
+        append = False
+        if 'prefix' in opts:
+            filename = "{fn}_{i}".format(fn=opts.prefix, i=i)
+        elif 'out' in opts:
+            filename = opts.out
+            append = (i > 0)
+
         if opts.url:
             print(generate_url(dl_id, config))
         else:
-            download_to_file(dl_id, config, filename)
+            download_to_file(dl_id, config, filename, append)
 
 
 if __name__ == "__main__":

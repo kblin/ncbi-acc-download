@@ -60,6 +60,22 @@ def test_download_to_file(req, tmpdir):
     assert expected.check()
 
 
+def test_download_to_file_append(req, tmpdir):
+    """Test appending multiple downloads into a single file."""
+    req.get(core.ENTREZ_URL, text='This works.\n')
+    outdir = tmpdir.mkdir('outdir')
+    filename = outdir.join('foo.txt')
+    expected = outdir.join('foo.txt')
+    config = core.Config(molecule='nucleotide', verbose=False, out='foo.txt')
+
+    core.download_to_file('FOO', config, filename=filename, append=False)
+    core.download_to_file('BAR', config, filename=filename, append=True)
+    core.download_to_file('BAZ', config, filename=filename, append=True)
+
+    assert expected.check()
+    assert len(expected.readlines()) == 3
+
+
 def test_build_params():
     """Test we build the right set of parameters."""
     config = core.Config(molecule='nucleotide', verbose=False)

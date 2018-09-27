@@ -71,6 +71,7 @@ class Config(object):
         'emit',
         '_extended_validation',
         'format',
+        'keep_filename',
         'molecule',
         'verbose',
     )
@@ -80,6 +81,8 @@ class Config(object):
         """Initialise the config from scratch."""
         self.extended_validation = kwargs.get('extended_validation', 'none')
         self.molecule = kwargs.get('molecule', 'nucleotide')
+        self.keep_filename = 'out' in kwargs
+
         if self.molecule == 'nucleotide':
             self.format = kwargs.get('format', 'genbank')
         else:
@@ -114,18 +117,22 @@ class Config(object):
         return config
 
 
-def download_to_file(dl_id, config, filename=None):
+def download_to_file(dl_id, config, filename=None, append=False):
     """Download a single ID from NCBI and store it to a file."""
-    # types: string, Config, string -> None
+    # types: string, Config, string, bool -> None
+    mode = 'a' if append else 'w'
 
     url = _get_url_by_format(config)
     params = build_params(dl_id, config)
 
     r = get_stream(url, params)
     config.emit("Downloading {}\n".format(r.url))
-    outfile_name = _generate_filename(params, filename)
+    if config.keep_filename:
+        outfile_name = filename
+    else:
+        outfile_name = _generate_filename(params, filename)
 
-    with open(outfile_name, 'w') as fh:
+    with open(outfile_name, mode) as fh:
         _validate_and_write(r, fh, dl_id, config)
 
 

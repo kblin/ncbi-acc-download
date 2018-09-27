@@ -51,6 +51,20 @@ To just generate a list of download URLs to run the actual download elsewhere, r
 ncbi-acc-download --url AB_12345
 ```
 
+If you want to concatenate multiple sequences into a single file, run
+```
+ncbi-acc-download --out two_genomes.gbk AB_12345 AB_23456
+```
+
+You can use this with `/dev/stdout` as the filename to print the downloaded data to
+standard output instead of writing to a file if you want to chain `ncbi-acc-download` with other
+command line tools, like so:
+```
+ncbi-genome-download --out /dev/stdout --format fasta AB_12345 AB_23456 | gzip > two_genomes.fa.gz
+```
+
+You can get more detailed information on the download progress by using the `--verbose` or `-v` flag.
+
 To get an overview of all options, run
 ```
 ncbi-acc-download --help
