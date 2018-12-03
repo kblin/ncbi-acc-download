@@ -1,0 +1,14 @@
+LOCUS       NZ_BASQ01000000      3396165 bp    DNA     linear   BCT 24-APR-2017
+DEFINITION  Microbacterium sp. TS-1, whole genome shotgun sequencing project.
+ACCESSION   NZ_BASQ00000000
+VERSION     NZ_BASQ00000000.1
+FEATURES             Location/Qualifiers
+     source          1..3396165
+                     /organism="Microbacterium sp. TS-1"
+                     /mol_type="genomic DNA"
+                     /strain="TS-1"
+                     /db_xref="taxon:1344956"
+WGS         BASQ01000001-BASQ01000003
+WGS_SCAFLD  NZ_BASQ01000001-NZ_BASQ01000003
+//
+

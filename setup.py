@@ -28,6 +28,9 @@ tests_require = [
     'pytest-mock',
 ]
 
+recursive_require = [
+    'biopython',
+]
 validate_require = [
     'biopython',
 ]
@@ -80,6 +83,7 @@ setup(
         'Operating System :: OS Independent',
     ],
     extras_require={
+        'recursive': recursive_require,
         'testing': tests_require,
         'validate': validate_require,
     },

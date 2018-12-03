@@ -4,17 +4,16 @@ from argparse import Namespace
 from io import StringIO
 import pytest
 import requests
-import requests_mock
 
 from ncbi_acc_download import core
-
-
-@pytest.yield_fixture
-def req():
-    """Get requests_mock into the pytest infrastructure."""
-    with requests_mock.mock() as req:
-        yield req
-
+from ncbi_acc_download.download import (
+    ENTREZ_URL,
+    SVIEWER_URL,
+)
+from ncbi_acc_download.errors import (
+    BadPatternError,
+    DownloadError,
+)
 
 def test_config():
     """Test the config class."""
@@ -49,7 +48,7 @@ def test_config_have_biopython():
 
 def test_download_to_file(req, tmpdir):
     """Test downloading things from NCBI."""
-    req.get(core.ENTREZ_URL, text='This works.')
+    req.get(ENTREZ_URL, text='This works.')
     outdir = tmpdir.mkdir('outdir')
     filename = outdir.join('foo')
     expected = outdir.join('foo.gbk')
@@ -62,7 +61,7 @@ def test_download_to_file(req, tmpdir):
 
 def test_download_to_file_append(req, tmpdir):
     """Test appending multiple downloads into a single file."""
-    req.get(core.ENTREZ_URL, text='This works.\n')
+    req.get(ENTREZ_URL, text='This works.\n')
     outdir = tmpdir.mkdir('outdir')
     filename = outdir.join('foo.txt')
     expected = outdir.join('foo.txt')
@@ -177,7 +176,7 @@ def test_validate_and_write_error_pattern_raises(req):
     r = requests.get('http://fake/')
     config = core.Config()
 
-    with pytest.raises(core.BadPatternError):
+    with pytest.raises(BadPatternError):
         core._validate_and_write(r, handle, 'FAKE', config)
 
 
@@ -208,26 +207,26 @@ def test_validate_and_write_extended_validation(req):
 
 def test_get_stream_exception(req):
     """Test getting a download stream handles exceptions."""
-    req.get(core.ENTREZ_URL, exc=requests.exceptions.RequestException)
+    req.get(ENTREZ_URL, exc=requests.exceptions.RequestException)
     params = dict(id='FAKE')
-    with pytest.raises(core.DownloadError):
-        core.get_stream(core.ENTREZ_URL, params)
+    with pytest.raises(DownloadError):
+        core.get_stream(ENTREZ_URL, params)
 
 
 def test_get_stream_bad_status(req):
     """Test getting a download stream handles bad status codes."""
-    req.get(core.ENTREZ_URL, text=u'Nope!', status_code=404)
+    req.get(ENTREZ_URL, text=u'Nope!', status_code=404)
     params = dict(id='FAKE')
-    with pytest.raises(core.DownloadError):
-        core.get_stream(core.ENTREZ_URL, params)
+    with pytest.raises(DownloadError):
+        core.get_stream(ENTREZ_URL, params)
 
 
 def test_generate_url():
     """Test URL generation."""
     config = core.Config()
-    expected = "{}?{}".format(core.ENTREZ_URL, "retmode=text&id=FAKE&db=nucleotide&rettype=gbwithparts")
+    expected = "{}?{}".format(ENTREZ_URL, "retmode=text&id=FAKE&db=nucleotide&rettype=gbwithparts")
     assert expected == core.generate_url("FAKE", config)
 
     config.format = 'gff3'
-    expected = "{}?{}".format(core.SVIEWER_URL, "retmode=text&id=FAKE&db=nucleotide&report=gff3")
+    expected = "{}?{}".format(SVIEWER_URL, "retmode=text&id=FAKE&db=nucleotide&report=gff3")
     assert expected == core.generate_url("FAKE", config)

@@ -1,0 +1,19 @@
+LOCUS       NC_007194                 60 bp    DNA     linear   CON 03-APR-2018
+DEFINITION  Aspergillus fumigatus Af293 chromosome 1, whole genome shotgun
+            sequence.
+ACCESSION   NC_007194
+VERSION     NC_007194.1
+KEYWORDS    .
+SOURCE      
+  ORGANISM  .
+            .
+FEATURES             Location/Qualifiers
+     source          1..60
+                     /organism="Aspergillus fumigatus Af293"
+                     /mol_type="genomic DNA"
+                     /strain="Af293"
+                     /db_xref="taxon:330879"
+                     /chromosome="1"
+ORIGIN
+        1 cctaacccta accctaaccc taaccctaac cctaacccta accctaaccc taaccctaac
+//

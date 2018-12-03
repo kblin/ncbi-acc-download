@@ -1,4 +1,4 @@
-# Copyright 2017 Kai Blin
+# Copyright 2017,2018 Kai Blin
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,53 +15,25 @@
 from __future__ import print_function
 import functools
 from io import StringIO
-import requests
 import sys
-try:
-    from httplib import IncompleteRead
-except ImportError:
-    from http.client import IncompleteRead
 try:
     from urllib import urlencode
 except ImportError:
     from urllib.parse import urlencode
-from ncbi_acc_download.validate import HAVE_BIOPYTHON, run_extended_validation, VALIDATION_LEVELS
 
-
-ENTREZ_URL = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi'
-SVIEWER_URL = 'https://eutils.ncbi.nlm.nih.gov/sviewer/viewer.cgi'
-
-ERROR_PATTERNS = (
-    u'Error reading from remote server',
-    u'Bad gateway',
-    u'Bad Gateway',
-    u'Cannot process ID list',
-    u'server is temporarily unable to service your request',
-    u'Service unavailable',
-    u'Server Error',
-    u'ID list is empty',
-    u'Resource temporarily unavailable',
-    u'Failed to retrieve sequence',
-    u'Failed to understand id',
+from ncbi_acc_download.download import (
+    build_params,
+    get_stream,
+    get_url_by_format,
+    write_stream,
 )
-
-
-class DownloadError(RuntimeError):
-    """Base error for all problems when downloading from NCBI."""
-
-    pass
-
-
-class BadPatternError(DownloadError):
-    """Error thrown when download file contains an error pattern."""
-
-    pass
-
-
-class ValidationError(DownloadError):
-    """Error thrown when download file failes extended validation."""
-
-    pass
+from ncbi_acc_download.errors import ValidationError
+from ncbi_acc_download.validate import (
+    HAVE_BIOPYTHON,
+    run_extended_validation,
+    VALIDATION_LEVELS,
+)
+from ncbi_acc_download.wgs import download_wgs_parts
 
 
 class Config(object):
@@ -73,6 +45,7 @@ class Config(object):
         'format',
         'keep_filename',
         'molecule',
+        'recursive',
         'verbose',
     )
 
@@ -82,6 +55,7 @@ class Config(object):
         self.extended_validation = kwargs.get('extended_validation', 'none')
         self.molecule = kwargs.get('molecule', 'nucleotide')
         self.keep_filename = 'out' in kwargs
+        self.recursive = kwargs.get('recursive', False)
 
         if self.molecule == 'nucleotide':
             self.format = kwargs.get('format', 'genbank')
@@ -122,7 +96,7 @@ def download_to_file(dl_id, config, filename=None, append=False):
     # types: string, Config, string, bool -> None
     mode = 'a' if append else 'w'
 
-    url = _get_url_by_format(config)
+    url = get_url_by_format(config)
     params = build_params(dl_id, config)
 
     r = get_stream(url, params)
@@ -140,61 +114,13 @@ def generate_url(dl_id, config):
     """Generate the Entrez URL to download a file using a separate tool"""
     # types: string, Config -> string
 
-    url = _get_url_by_format(config)
+    url = get_url_by_format(config)
     params = build_params(dl_id, config)
 
     # remove the tool field, some other tool will do the download
     del params['tool']
     encoded_params = urlencode(params, doseq=True)
     return "?".join([url, encoded_params])
-
-
-def _get_url_by_format(config):
-    """Get URL depending on the format."""
-    # types: Config -> string
-
-    if config.format == 'gff3':
-        return SVIEWER_URL
-
-    return ENTREZ_URL
-
-def get_stream(url, params):
-    """Get the actual streamed request from NCBI."""
-    try:
-        r = requests.get(url, params=params, stream=True)
-    except (requests.exceptions.RequestException, IncompleteRead) as e:
-        print("Failed to download {!r} from NCBI".format(params['id']), file=sys.stderr)
-        raise DownloadError(str(e))
-
-    if r.status_code != requests.codes.ok:
-        print("Failed to download file with id {} from NCBI".format(params['id']), file=sys.stderr)
-        raise DownloadError("Download failed with return code: {}".format(r.status_code))
-
-    return r
-
-
-def build_params(dl_id, config):
-    """Build the query parameters for the Entrez query."""
-    params = dict(tool='ncbi-acc-download', retmode='text')
-
-    # delete / characters and as NCBI ignores IDs after #, do the same.
-    params['id'] = dl_id
-
-    params['db'] = config.molecule
-
-    if config.molecule == 'nucleotide':
-        if config.format == 'genbank':
-            params['rettype'] = 'gbwithparts'
-        elif config.format == 'featuretable':
-            params['rettype'] = 'ft'
-        elif config.format == 'gff3':
-            params['report'] = 'gff3'
-        else:
-            params['rettype'] = 'fasta'
-    else:
-        params['rettype'] = 'fasta'
-
-    return params
 
 
 def _generate_filename(params, filename):
@@ -217,25 +143,21 @@ def _generate_filename(params, filename):
 
 
 def _validate_and_write(request, orig_handle, dl_id, config):
-    if config.extended_validation != 'none':
+    if config.extended_validation != 'none' or config.recursive:
         handle = StringIO()
     else:
         handle = orig_handle
 
-    # use a chunk size of 4k, as that's what most filesystems use these days
-    for chunk in request.iter_content(4096, decode_unicode=True):
-        config.emit(u'.')
-        for pattern in ERROR_PATTERNS:
-            if pattern in chunk:
-                raise BadPatternError("Failed to download file with id {} from NCBI: {}".format(
-                    dl_id, pattern))
+    write_stream(request, handle, dl_id, config)
 
-        handle.write(chunk)
-    config.emit(u'\n')
+    if config.recursive:
+        downloaded = download_wgs_parts(handle, config)
+        handle = downloaded
 
-    if config.extended_validation == 'none':
-        return
+    if config.extended_validation != 'none':
+        if not run_extended_validation(handle, config.format, config.extended_validation):
+            raise ValidationError("Sequence(s) downloaded for {} failed to load.".format(dl_id))
 
-    if not run_extended_validation(handle, config.format, config.extended_validation):
-        raise ValidationError("Sequence(s) downloaded for {} failed to load.".format(dl_id))
-    orig_handle.write(handle.getvalue())
+
+    if config.extended_validation != 'none' or config.recursive:
+        orig_handle.write(handle.getvalue())

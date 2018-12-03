@@ -1,0 +1,55 @@
+LOCUS       NZ_BASQ01000001          120 bp    DNA     linear   CON 24-APR-2017
+DEFINITION  Microbacterium sp. TS-1, whole genome shotgun sequence.
+ACCESSION   NZ_BASQ01000001
+VERSION     NZ_BASQ01000001.1
+KEYWORDS    .
+SOURCE      Microbacterium sp. TS-1
+  ORGANISM  Microbacterium sp. TS-1
+            Bacteria; Actinobacteria; Micrococcales; Microbacteriaceae;
+            Microbacterium.
+FEATURES             Location/Qualifiers
+     source          1..120
+                     /organism="Microbacterium sp. TS-1"
+                     /mol_type="genomic DNA"
+                     /strain="TS-1"
+                     /db_xref="taxon:1344956"
+ORIGIN
+        1 aagagggcca cccaatgttg ggtggccctt tttcgtgccc gtgtgaccgc agagttgact
+       61 ctcgcggctg tgtggtgtgc aatatattgc atgtcgctgg cccccgtctc ccgtccggcg
+//
+LOCUS       NZ_BASQ01000002           60 bp    DNA     linear   CON 24-APR-2017
+DEFINITION  Microbacterium sp. TS-1, whole genome shotgun sequence.
+ACCESSION   NZ_BASQ01000002
+VERSION     NZ_BASQ01000002.1
+KEYWORDS    .
+SOURCE      Microbacterium sp. TS-1
+  ORGANISM  Microbacterium sp. TS-1
+            Bacteria; Actinobacteria; Micrococcales; Microbacteriaceae;
+            Microbacterium.
+FEATURES             Location/Qualifiers
+     source          1..60
+                     /organism="Microbacterium sp. TS-1"
+                     /mol_type="genomic DNA"
+                     /strain="TS-1"
+                     /db_xref="taxon:1344956"
+ORIGIN
+        1 ttgacctgtt cataaccaga gccggagacc gactcggttg tgaggtgtgg tggggaccct
+//
+LOCUS       NZ_BASQ01000003           30 bp    DNA     linear   CON 09-APR-2017
+DEFINITION  Microbacterium sp. TS-1, whole genome shotgun sequence.
+ACCESSION   NZ_BASQ01000003
+VERSION     NZ_BASQ01000003.1
+KEYWORDS    .
+SOURCE      Microbacterium sp. TS-1
+  ORGANISM  Microbacterium sp. TS-1
+            Bacteria; Actinobacteria; Micrococcales; Microbacteriaceae;
+            Microbacterium.
+FEATURES             Location/Qualifiers
+     source          1..30
+                     /organism="Microbacterium sp. TS-1"
+                     /mol_type="genomic DNA"
+                     /strain="TS-1"
+                     /db_xref="taxon:1344956"
+ORIGIN
+        1 gggtggggta tggttgtgaa gttgccctct
+//

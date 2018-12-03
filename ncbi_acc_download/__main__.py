@@ -26,6 +26,9 @@ def main():
                         help="Single filename to use for the combined output.")
     parser.add_argument('-p', '--prefix', default=SUPPRESS,
                         help="Filename prefix to use for output files instead of using the NCBI ID.")
+    if HAVE_BIOPYTHON:
+        parser.add_argument('-r', '--recursive', action="store_true", default=False,
+                            help="Recursively get all entries of a WGS entry.")
     parser.add_argument('--url', action="store_true", default=False,
                         help="Instead of downloading the sequences, just print the URLs to stdout.")
     parser.add_argument('-v', '--verbose', action="store_true", default=False,
@@ -35,6 +38,7 @@ def main():
 
     config = Config.from_args(opts)
 
+    # TODO: Change this to download multiple records at once?
     for i, dl_id in enumerate(opts.ids):
         filename = None
         append = False

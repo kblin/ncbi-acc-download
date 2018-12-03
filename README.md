@@ -63,6 +63,12 @@ command line tools, like so:
 ncbi-genome-download --out /dev/stdout --format fasta AB_12345 AB_23456 | gzip > two_genomes.fa.gz
 ```
 
+If you want to download all records covered by a WGS master record instead of the master record itself,
+run
+```
+ncbi-acc-download --recursive NZ_EXMP01000000
+```
+
 You can get more detailed information on the download progress by using the `--verbose` or `-v` flag.
 
 To get an overview of all options, run
