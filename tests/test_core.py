@@ -179,6 +179,11 @@ def test_validate_and_write_error_pattern_raises(req):
     with pytest.raises(BadPatternError):
         core._validate_and_write(r, handle, 'FAKE', config)
 
+    req.get('http://fake/', text=u'Error: CEFetchPApplication::proxy_stream(): Failed to retrieve sequence: NC_405534')
+    r = requests.get('http://fake/')
+    with pytest.raises(BadPatternError):
+        core._validate_and_write(r, handle, 'FAKE', config)
+
 
 def test_validate_and_write_emit(req):
     """Test writing prints dots in verbose mode."""
