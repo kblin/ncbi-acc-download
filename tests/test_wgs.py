@@ -21,11 +21,21 @@ def test_init():
     assert wgs_range.start == 1
     assert wgs_range.end == 3
 
+    wgs_range = WgsRange("ABCD", 5, 1, 1)
+    assert wgs_range.identifier == "ABCD"
+    assert wgs_range.width == 5
+    assert wgs_range.start == 1
+    assert wgs_range.end == 1
+
 
 def test_get_ids():
     wgs_range = WgsRange("ABCD", 5, 1, 3)
 
     expected = ["ABCD00001", "ABCD00002", "ABCD00003"]
+    assert wgs_range.get_ids() == expected
+
+    wgs_range = WgsRange("ABCD", 5, 1, 1)
+    expected = ["ABCD00001"]
     assert wgs_range.get_ids() == expected
 
 
@@ -37,8 +47,13 @@ def test_from_string():
     assert wgs_range.start == 1000001
     assert wgs_range.end == 1000022
 
-    with pytest.raises(ValueError, match="No hyphen found."):
-        _ = WgsRange.from_string("ABCD123")
+    # Some records like JOAR00000000.1 only have a single entry in WGS_SCAFLD
+    wgs_range = WgsRange.from_string("ABCD123")
+    assert wgs_range.identifier == "ABCD"
+    assert wgs_range.width == 3
+    assert wgs_range.start == 123
+    assert wgs_range.end == 123
+    assert wgs_range.get_ids() == ["ABCD123"]
 
     with pytest.raises(ValueError, match="More than one hyphen in input."):
         _ = WgsRange.from_string("ABCD123-ABCD234-ABCD345")

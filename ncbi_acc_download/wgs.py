@@ -50,9 +50,9 @@ class WgsRange:
     @classmethod
     def from_string(cls, range_string):
         if '-' not in range_string:
-            raise ValueError("No hyphen found: {}".format(range_string))
-
-        first, last = range_string.split('-', 1)
+            first = last = range_string
+        else:
+            first, last = range_string.split('-', 1)
 
         if '-' in last:
             raise ValueError("More than one hyphen in input.")
