@@ -13,6 +13,7 @@
 # limitations under the License.
 """The actual download functionality."""
 
+from collections import OrderedDict
 try:
     from httplib import IncompleteRead
 except ImportError:
@@ -55,7 +56,7 @@ def get_url_by_format(config):
 
 def build_params(dl_id, config):
     """Build the query parameters for the Entrez query."""
-    params = dict(tool='ncbi-acc-download', retmode='text')
+    params = OrderedDict(tool='ncbi-acc-download', retmode='text')
 
     # delete / characters and as NCBI ignores IDs after #, do the same.
     params['id'] = dl_id

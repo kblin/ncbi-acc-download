@@ -67,9 +67,9 @@ def test_download_to_file_append(req, tmpdir):
     expected = outdir.join('foo.txt')
     config = core.Config(molecule='nucleotide', verbose=False, out='foo.txt')
 
-    core.download_to_file('FOO', config, filename=filename, append=False)
-    core.download_to_file('BAR', config, filename=filename, append=True)
-    core.download_to_file('BAZ', config, filename=filename, append=True)
+    core.download_to_file('FOO', config, filename=str(filename), append=False)
+    core.download_to_file('BAR', config, filename=str(filename), append=True)
+    core.download_to_file('BAZ', config, filename=str(filename), append=True)
 
     assert expected.check()
     assert len(expected.readlines()) == 3
