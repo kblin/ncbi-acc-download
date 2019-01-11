@@ -93,13 +93,17 @@ def get_stream(url, params):
 def write_stream(request, handle, dl_id, config):
     """Write all chunks of the request to the handle."""
     # use a chunk size of 4k, as that's what most filesystems use these days
-    for chunk in request.iter_content(4096, decode_unicode=True):
-        config.emit(u'.')
-        for pattern in ERROR_PATTERNS:
-            if pattern in chunk:
-                raise BadPatternError("Failed to download record(s) with id(s) {} from NCBI: {}".format(
-                    dl_id, pattern))
+    try:
+        for chunk in request.iter_content(4096, decode_unicode=True):
+            config.emit(u'.')
+            for pattern in ERROR_PATTERNS:
+                if pattern in chunk:
+                    raise BadPatternError("Failed to download record(s) with id(s) {} from NCBI: {}".format(
+                        dl_id, pattern))
 
-        handle.write(chunk)
+            handle.write(chunk)
+    except requests.exceptions.ChunkedEncodingError as err:
+        print("Download of {!r} aborted: {}".format(dl_id, str(err)), file=sys.stderr)
+        raise DownloadError(str(err))
     config.emit(u'\n')
 
