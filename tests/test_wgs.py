@@ -5,7 +5,7 @@ import os
 import pytest
 
 from ncbi_acc_download.core import Config
-from ncbi_acc_download.download import ENTREZ_URL
+from ncbi_acc_download.core import ENTREZ_URL
 from ncbi_acc_download import wgs
 from ncbi_acc_download.wgs import WgsRange
 

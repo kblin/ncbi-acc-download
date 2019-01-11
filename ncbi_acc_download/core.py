@@ -35,17 +35,22 @@ from ncbi_acc_download.validate import (
 )
 from ncbi_acc_download.wgs import download_wgs_parts
 
+ENTREZ_URL = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi'
+SVIEWER_URL = 'https://eutils.ncbi.nlm.nih.gov/sviewer/viewer.cgi'
+
 
 class Config(object):
     """NCBI genome download configuration."""
 
     __slots__ = (
         'emit',
+        'entrez_url',
         '_extended_validation',
         'format',
         'keep_filename',
         'molecule',
         'recursive',
+        'sviewer_url',
         'verbose',
     )
 
@@ -56,6 +61,9 @@ class Config(object):
         self.molecule = kwargs.get('molecule', 'nucleotide')
         self.keep_filename = 'out' in kwargs
         self.recursive = kwargs.get('recursive', False)
+
+        self.entrez_url = kwargs.get('entrez_url', ENTREZ_URL)
+        self.sviewer_url = kwargs.get('sviewer_url', SVIEWER_URL)
 
         if self.molecule == 'nucleotide':
             self.format = kwargs.get('format', 'genbank')

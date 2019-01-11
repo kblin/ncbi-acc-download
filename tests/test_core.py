@@ -6,7 +6,7 @@ import pytest
 import requests
 
 from ncbi_acc_download import core
-from ncbi_acc_download.download import (
+from ncbi_acc_download.core import (
     ENTREZ_URL,
     SVIEWER_URL,
 )
@@ -14,6 +14,7 @@ from ncbi_acc_download.errors import (
     BadPatternError,
     DownloadError,
 )
+
 
 def test_config():
     """Test the config class."""

@@ -26,10 +26,6 @@ from ncbi_acc_download.errors import (
     DownloadError,
 )
 
-ENTREZ_URL = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi'
-SVIEWER_URL = 'https://eutils.ncbi.nlm.nih.gov/sviewer/viewer.cgi'
-
-
 ERROR_PATTERNS = (
     u'Error reading from remote server',
     u'Bad gateway',
@@ -44,14 +40,15 @@ ERROR_PATTERNS = (
     u'Failed to understand id',
 )
 
+
 def get_url_by_format(config):
     """Get URL depending on the format."""
     # types: Config -> string
 
     if config.format == 'gff3':
-        return SVIEWER_URL
+        return config.sviewer_url
 
-    return ENTREZ_URL
+    return config.entrez_url
 
 
 def build_params(dl_id, config):
