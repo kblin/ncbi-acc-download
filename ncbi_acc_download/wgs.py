@@ -13,7 +13,15 @@
 # limitations under the License.
 """Recursively download the actual entries for WGS records."""
 
-from io import StringIO
+import sys
+
+# In python2, SeqIO.write insists on writing 'str', so make sure
+# the temporary handle accepts that.
+# TODO: Remove this once we drop 2.7 support
+if sys.version_info[0] >= 3:  # pragma: no cover
+    from io import StringIO
+else:  # pragma: no cover
+    from StringIO import StringIO
 
 from ncbi_acc_download.download import (
     build_params,
