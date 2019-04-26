@@ -13,6 +13,8 @@
 # limitations under the License.
 """The actual download functionality."""
 
+from __future__ import print_function
+
 from collections import OrderedDict
 try:
     from httplib import IncompleteRead
