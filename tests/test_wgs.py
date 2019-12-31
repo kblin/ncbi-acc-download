@@ -127,3 +127,16 @@ def test_download_wgs_no_parts(req):
     assert outhandle.getvalue() == supercontig_full.read()
     supercontig_full.close()
     supercontig.close()
+
+
+@pytest.mark.xfail
+def test_download_wgs_parts_tsa(req):
+    cfg = Config(format="genbank")
+    wgs_contig = open(full_path('tsa.gbk'), 'rt')
+    req.get(ENTREZ_URL, body=open(full_path('tsa_full.gbk'), 'rt'))
+
+    outhandle = wgs.download_wgs_parts(wgs_contig, cfg)
+    wgs_full = open(full_path('tsa_full.gbk'), 'rt')
+    assert outhandle.getvalue() == wgs_full.read()
+    wgs_full.close()
+    wgs_contig.close()

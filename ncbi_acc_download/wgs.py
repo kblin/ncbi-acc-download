@@ -108,7 +108,8 @@ def download_wgs_parts(handle, config):
     for record in records:
         run_download = isinstance(record.seq, UnknownSeq)
         if run_download and ('wgs_scafld' in record.annotations or
-                             'wgs' in record.annotations):
+                             'wgs' in record.annotations or
+                             'tsa' in record.annotations):
             updated_records.extend(download_wgs_for_record(record, config))
         elif run_download and 'contig' in record.annotations:
             updated_records.extend(fix_supercontigs(record, config))
@@ -131,6 +132,10 @@ def download_wgs_for_record(record, config):
         # Biopython splits on '-' for us, but doesn't actually calculate the range
         # Unlike WGS_SCAFLD, this is just a list
         wgs_range = WgsRange.from_string('-'.join(record.annotations['wgs']))
+    elif 'tsa' in record.annotations:
+        # Biopython splits on '-' for us, but doesn't actually calculate the range
+        # Like WGS, this is just a list
+        wgs_range = WgsRange.from_string('-'.join(record.annotations['tsa']))
     else:
         return [record]
 

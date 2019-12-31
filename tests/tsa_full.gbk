@@ -1,0 +1,164 @@
+LOCUS       GHGH01000001             507 bp    RNA     linear   TSA 02-APR-2019
+DEFINITION  TSA: Acropora millepora comp83269_c2_seq5, transcribed RNA sequence.
+ACCESSION   GHGH01000001
+VERSION     GHGH01000001.1
+DBLINK      BioProject: PRJNA473876
+            BioSample: SAMN10491283
+            Sequence Read Archive: SRR8254540
+KEYWORDS    TSA; Transcriptome Shotgun Assembly.
+SOURCE      Acropora millepora
+  ORGANISM  Acropora millepora
+            Eukaryota; Metazoa; Cnidaria; Anthozoa; Hexacorallia; Scleractinia;
+            Astrocoeniina; Acroporidae; Acropora.
+REFERENCE   1  (bases 1 to 507)
+  AUTHORS   Ying,H., Foret,S., Ball,E., Hayward,D.C., Moya,A. and Miller,D.J.
+  TITLE     Acropora millepora genome sequencing and assembly
+  JOURNAL   Unpublished
+REFERENCE   2  (bases 1 to 507)
+  AUTHORS   Ying,H., Foret,S., Ball,E., Hayward,D.C., Moya,A. and Miller,D.J.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (19-FEB-2019) Research School of Biology, Australian
+            National University, Sullivans Creek Road, Canberra, ACT 2617,
+            Australia
+COMMENT     Raw RNA-seq reads were trimmed using libngs with minimum quality of
+            20 and minimum read size of 80 nt. Trinity r2013-02-16 was then
+            employed for de novo transcriptome assembly.
+            
+            ##Assembly-Data-START##
+            Assembly Method       :: Trinity r2013-02-16
+            Assembly Name         :: trinity.001
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..507
+                     /organism="Acropora millepora"
+                     /mol_type="transcribed RNA"
+                     /submitter_seqid="comp83269_c2_seq5"
+                     /db_xref="taxon:45264"
+                     /tissue_type="late planula"
+                     /country="Australia: Queensland"
+                     /collection_date="2011"
+ORIGIN
+        1 tttttttttt ccagaacgaa gttcccaggc ttcaaaatcc aaagtccttc agttggttta
+       61 tgtgactttc ccgtgctgca tgggcgttgg aggtttagtt tccttgttgg taccaggatg
+      121 atcttgatta ataagaaata cgaagcgaag accgcagatc tgtcatgatg aaaggagcag
+      181 aaaaagggca aatatgaaaa cacgatcgct cgaaaagttt aagcgtgctt atcattggtt
+      241 agaacatgtt ggacggatcg gtagtccgca aatataacat gtcgagtctg ccgaaagaga
+      301 aaactgctcc agtgaccaag gtcaactggt tatcctcaca gggcaacata agtttcgcaa
+      361 gcatctagga tcgcataacc aaaatcaact cccttgctaa ttacatctgc ttgtggtgtt
+      421 gtgcgccaag atcagacatg gctgtgtagt ggctgccatg gggagaaact ggtattggac
+      481 tcagtttatt aatctccata gggtaca
+//
+LOCUS       GHGH01000002             230 bp    RNA     linear   TSA 02-APR-2019
+DEFINITION  TSA: Acropora millepora comp1264959_c0_seq1, transcribed RNA
+            sequence.
+ACCESSION   GHGH01000002
+VERSION     GHGH01000002.1
+DBLINK      BioProject: PRJNA473876
+            BioSample: SAMN10491283
+            Sequence Read Archive: SRR8254540
+KEYWORDS    TSA; Transcriptome Shotgun Assembly.
+SOURCE      Acropora millepora
+  ORGANISM  Acropora millepora
+            Eukaryota; Metazoa; Cnidaria; Anthozoa; Hexacorallia; Scleractinia;
+            Astrocoeniina; Acroporidae; Acropora.
+REFERENCE   1  (bases 1 to 230)
+  AUTHORS   Ying,H., Foret,S., Ball,E., Hayward,D.C., Moya,A. and Miller,D.J.
+  TITLE     Acropora millepora genome sequencing and assembly
+  JOURNAL   Unpublished
+REFERENCE   2  (bases 1 to 230)
+  AUTHORS   Ying,H., Foret,S., Ball,E., Hayward,D.C., Moya,A. and Miller,D.J.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (19-FEB-2019) Research School of Biology, Australian
+            National University, Sullivans Creek Road, Canberra, ACT 2617,
+            Australia
+COMMENT     Raw RNA-seq reads were trimmed using libngs with minimum quality of
+            20 and minimum read size of 80 nt. Trinity r2013-02-16 was then
+            employed for de novo transcriptome assembly.
+            
+            ##Assembly-Data-START##
+            Assembly Method       :: Trinity r2013-02-16
+            Assembly Name         :: trinity.001
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..230
+                     /organism="Acropora millepora"
+                     /mol_type="transcribed RNA"
+                     /submitter_seqid="comp1264959_c0_seq1"
+                     /db_xref="taxon:45264"
+                     /tissue_type="late planula"
+                     /country="Australia: Queensland"
+                     /collection_date="2011"
+ORIGIN
+        1 cgcctgtaac aagagactgt gaagatgagt ctcactttct tgactatgtt tttcattcaa
+       61 accttaaaaa aattttcttc aacaaaagtt aataagaaaa atcctttgcc ataaaatatt
+      121 gctctatttg tgagatgaaa tttcatcact gctctttgaa accctcacag taacaagttt
+      181 ttattaggtc atattatcaa tgattatcac tacttctttt ccataataat
+//
+LOCUS       GHGH01000003            1386 bp    RNA     linear   TSA 02-APR-2019
+DEFINITION  TSA: Acropora millepora comp76929_c0_seq2, transcribed RNA sequence.
+ACCESSION   GHGH01000003
+VERSION     GHGH01000003.1
+DBLINK      BioProject: PRJNA473876
+            BioSample: SAMN10491283
+            Sequence Read Archive: SRR8254540
+KEYWORDS    TSA; Transcriptome Shotgun Assembly.
+SOURCE      Acropora millepora
+  ORGANISM  Acropora millepora
+            Eukaryota; Metazoa; Cnidaria; Anthozoa; Hexacorallia; Scleractinia;
+            Astrocoeniina; Acroporidae; Acropora.
+REFERENCE   1  (bases 1 to 1386)
+  AUTHORS   Ying,H., Foret,S., Ball,E., Hayward,D.C., Moya,A. and Miller,D.J.
+  TITLE     Acropora millepora genome sequencing and assembly
+  JOURNAL   Unpublished
+REFERENCE   2  (bases 1 to 1386)
+  AUTHORS   Ying,H., Foret,S., Ball,E., Hayward,D.C., Moya,A. and Miller,D.J.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (19-FEB-2019) Research School of Biology, Australian
+            National University, Sullivans Creek Road, Canberra, ACT 2617,
+            Australia
+COMMENT     Raw RNA-seq reads were trimmed using libngs with minimum quality of
+            20 and minimum read size of 80 nt. Trinity r2013-02-16 was then
+            employed for de novo transcriptome assembly.
+            
+            ##Assembly-Data-START##
+            Assembly Method       :: Trinity r2013-02-16
+            Assembly Name         :: trinity.001
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..1386
+                     /organism="Acropora millepora"
+                     /mol_type="transcribed RNA"
+                     /submitter_seqid="comp76929_c0_seq2"
+                     /db_xref="taxon:45264"
+                     /tissue_type="late planula"
+                     /country="Australia: Queensland"
+                     /collection_date="2011"
+ORIGIN
+        1 ccgatctggc gtcctcgttg ccgtagtcta tgcacaagct ccctgccttc ctgctcgcac
+       61 gtacgaccaa acaaattgca caatgtcaat cagtaggtga tagactacaa aagtgtgtga
+      121 ggcttcttcg atattccgat tggttgccga aaaaatctgt tttgaagttg gcgaattgac
+      181 tatttgcgca tcttcgtaaa tcgagagcgc gtaaaaggga aatattcgga atatcaaaaa
+      241 agcctcacac acttttgcgc attgataacc aaggaacatt ttggccaaat ttcataaaaa
+      301 tccgtcaaat ctacataccc tattatttcg cttgaagaag ggaaatcaag ttcctcagtt
+      361 ttctttcctt tacttttaag gcctggtttt taaaacgtaa gtgaaaactt ttacatgatc
+      421 gagtcatttg atgtcagatt ctatgacaga agcatcaaat gagtcgacac tgttcgtggc
+      481 ttgctttgga ttgcgactgt cctcaatttc ggtgagagag aagcgagcga ccacaataca
+      541 cgcgaaactc ggacacgcaa ctcgtgcgaa attagagact actcgcactc taggctagct
+      601 taaaagtgga agtcagccca agtgggctgg cggataagtt ttagcgggat atcgaataac
+      661 gatcatttac catgctgaaa tgacggttcg tttgtccaat aacgctcgct ggcctggttt
+      721 ccgagcaaac gtaacataaa agttcctgcc aggtttgatg agacgaaaaa ttttacaaca
+      781 taagcatgcg ttatcttgcc caaggaacgc ggttacccga tcacaagttt atttggtgtt
+      841 tttggtatag aaagaattca tgtaaaacat gaaaacactt cttcttactc aaaataaaat
+      901 ataagattga aaatatttcg gtgactttga agacagtagt aatatttcat cccggacctt
+      961 ccagaagagc cagcctgcct catttaaaca agctcttcga ccattgatgc tctcaccaaa
+     1021 cgggataaga aatagtcatc atccctagtc ctttgtgctg tacaaaagta tgccattttg
+     1081 atatcaacta cacattcaag taagagacaa atgctacttg tttatcagcg ttcatttcta
+     1141 ctgtgtgcaa agtttcattg aatcagccat tgttttcttg actgtgagag aaaaaagaag
+     1201 ctattaagct ctttttagtg actgaagatt ccattttgaa tgtcatgaat cacacaacaa
+     1261 tttcattgcg aactgccatt ttttaagcac attttagcgc gtgatagaat taaaagcgta
+     1321 gtactattcg ttaagctcct gatatcatcc tctttttttt ttcttttttt tttttttttt
+     1381 tttttt
+//
