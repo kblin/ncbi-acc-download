@@ -13,6 +13,7 @@ from ncbi_acc_download.core import (
 from ncbi_acc_download.errors import (
     BadPatternError,
     DownloadError,
+    InvalidIdError,
 )
 
 
@@ -223,7 +224,7 @@ def test_get_stream_bad_status(req):
     """Test getting a download stream handles bad status codes."""
     req.get(ENTREZ_URL, text=u'Nope!', status_code=404)
     params = dict(id='FAKE')
-    with pytest.raises(DownloadError):
+    with pytest.raises(InvalidIdError):
         core.get_stream(ENTREZ_URL, params)
 
 
