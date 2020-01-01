@@ -20,6 +20,15 @@ class DownloadError(RuntimeError):
     pass
 
 
+class InvalidIdError(RuntimeError):
+    """Error thrown when Entrez responds with a 4xx error."""
+
+    def __init__(self, message, ids, status_code):
+        super().__init__(message)
+        self.ids = ids
+        self.status_code = status_code
+
+
 class BadPatternError(DownloadError):
     """Error thrown when download file contains an error pattern."""
 

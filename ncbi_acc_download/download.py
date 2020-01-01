@@ -26,6 +26,7 @@ import sys
 from ncbi_acc_download.errors import (
     BadPatternError,
     DownloadError,
+    InvalidIdError,
 )
 
 ERROR_PATTERNS = (
@@ -87,7 +88,7 @@ def get_stream(url, params):
 
     if r.status_code != requests.codes.ok:
         print("Failed to download file with id {} from NCBI".format(params['id']), file=sys.stderr)
-        raise DownloadError("Download failed with return code: {}".format(r.status_code))
+        raise InvalidIdError("Download failed with return code: {}".format(r.status_code), params["id"], r.status_code)
 
     return r
 
