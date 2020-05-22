@@ -44,6 +44,7 @@ class Config(object):
     """NCBI genome download configuration."""
 
     __slots__ = (
+        'range',
         'api_key',
         'emit',
         'entrez_url',
@@ -65,6 +66,7 @@ class Config(object):
         self.keep_filename = out is not None
         self.recursive = recursive
         self.api_key = api_key
+        self.range = kwargs.get('range', 'none')
 
         self.entrez_url = entrez_url
         self.sviewer_url = sviewer_url
