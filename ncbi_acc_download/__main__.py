@@ -33,6 +33,8 @@ def main():
                         help="Single filename to use for the combined output.")
     parser.add_argument('-p', '--prefix', default=SUPPRESS,
                         help="Filename prefix to use for output files instead of using the NCBI ID.")
+    parser.add_argument('-g', '--range', default=SUPPRESS,
+                        help="region to subset accession. only for single accession")
     if HAVE_BIOPYTHON:
         parser.add_argument('-r', '--recursive', action="store_true", default=False,
                             help="Recursively get all entries of a WGS entry.")
@@ -44,6 +46,8 @@ def main():
     opts = parser.parse_args()
 
     config = Config.from_args(opts)
+    if len(opts.ids) > 1 and config.range != "none":
+        raise ValueError("Ambiguous range for multiple ids")
 
     # TODO: Change this to download multiple records at once?
     for i, dl_id in enumerate(opts.ids):
