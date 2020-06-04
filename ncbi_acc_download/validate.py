@@ -31,10 +31,10 @@ def run_extended_validation(handle, file_format, validation_level):
                 ## Will write over the downloaded file
                 newfeats = []
                 for f in rec.features:
-                    if f.type == "CDS" or f.type == "gene":
+                    try:
                         if not isinstance(f.location.start, BeforePosition) and not isinstance(f.location.end, AfterPosition):
                             newfeats.append(f)
-                    else:
+                    except AttributeError:
                         newfeats.append(f)
                 rec.features = newfeats
                 records.append(rec)
