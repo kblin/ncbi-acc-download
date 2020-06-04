@@ -70,8 +70,10 @@ def build_params(dl_id, config):
             rli = config.range.split("..")
         if len(rli)==1:
             rli = config.range.split(".")
-        params['from'] = int(rli[0])
-        params['to'] = int(rli[1])
+        if rli[0] != "":
+            params['from'] = int(rli[0])
+        if rli[1] != "":
+            params['to'] = int(rli[1])
 
     if config.molecule == 'nucleotide':
         if config.format == 'genbank':

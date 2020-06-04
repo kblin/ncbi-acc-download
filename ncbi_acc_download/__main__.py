@@ -22,7 +22,7 @@ def main():
                         help="Specify USER NCBI API key. More info at https://www.ncbi.nlm.nih.gov/books/NBK25497/")
     if HAVE_BIOPYTHON:
         parser.add_argument('-e', '--extended-validation', action="store", default='none',
-                            choices=('none', 'loads', 'all'),
+                            choices=('none', 'loads', 'all', 'correct'),
                             help="Perform extended validation. Possible options are 'none' to skip validation, "
                                  "'loads' to check if the sequence file loads in Biopython, "
                                  "or 'all' to run all checks. Default: %(default)s")
