@@ -1,0 +1,52 @@
+LOCUS       NC_007194                541 bp    DNA     linear   CON 03-APR-2018
+DEFINITION  Aspergillus fumigatus Af293 chromosome 1, whole genome shotgun
+            sequence.
+ACCESSION   NC_007194 REGION: 60..600
+VERSION     NC_007194.1
+FEATURES             Location/Qualifiers
+     source          1..541
+                     /organism="Aspergillus fumigatus Af293"
+                     /mol_type="genomic DNA"
+                     /strain="Af293"
+                     /db_xref="taxon:330879"
+                     /chromosome="1"
+     repeat_region   <1..64
+                     /rpt_type=tandem
+                     /rpt_unit_seq="ccctaa"
+                     /satellite="microsatellite"
+     gene            <157..>541
+                     /locus_tag="AFUA_1G00100"
+                     /old_locus_tag="Afu1g00100"
+                     /db_xref="GeneID:3507995"
+     mRNA            <157..>541
+                     /locus_tag="AFUA_1G00100"
+                     /old_locus_tag="Afu1g00100"
+                     /product="MFS monocarboxylate transporter, putative"
+                     /note="transcript AFUA_1G00100A"
+                     /transcript_id="XM_001481640.1"
+                     /db_xref="GeneID:3507995"
+     CDS             <157..>541
+                     /locus_tag="AFUA_1G00100"
+                     /old_locus_tag="Afu1g00100"
+                     /note="encoded by transcript AFUA_1G00100A"
+                     /codon_start=1
+                     /product="MFS monocarboxylate transporter, putative"
+                     /protein_id="XP_001481690.1"
+                     /db_xref="GeneID:3507995"
+                     /translation="MSVRQVPKQRRTLIEFSAFKEVPCMLFCVAMFFGYIGFFNPIFY
+                     IEAFAIQKHAMGETLAFHLISILNATSVPGRIVPGILGLRFGPLNILLGSAIISGILS
+                     LCWIAIYNAGPLIVLAVLYGFSGAFVSLLAVALTTLNLNLQTLRTRMGMCSLLCGFGS
+                     LCRAPVAGAVLDNTRSYLGVQLYSGLTIGTTGVLLFFANHLKRRTN"
+ORIGIN
+        1 ccctaaccct aaccctaacc ctaaccctaa ccctaaccct aaccctaacc ctaaccctaa
+       61 ccctttaggc aactgcagct tcaaaccaga tttggatggg ccacacgcgt gctaggtttc
+      121 ctggttcttg gaacgacatt gttctcacct agtgtgatga gcgttcgtca agttccaaag
+      181 caaagacgca ctttgatcga gttttcagcg ttcaaggagg tcccgtgtat gctgttctgc
+      241 gtagcgatgt tctttggtta tattggattc ttcaacccca ttttctacat cgaagcgttt
+      301 gctatccaaa agcatgcaat gggagagacg cttgcattcc accttatctc gatcctaaat
+      361 gccacctcag tcccaggtcg gattgttcct ggcattcttg gcttgcgctt tggtccatta
+      421 aatatccttc taggcagtgc aatcattagc ggcatccttt cactctgctg gatagccatc
+      481 tacaacgcgg ggcccctaat agtgttagct gtcttgtacg gcttctccgg cgctttcgtc
+      541 t
+//
+
