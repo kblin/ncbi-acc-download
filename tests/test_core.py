@@ -237,3 +237,13 @@ def test_generate_url():
     config.format = 'gff3'
     expected = "{}?{}".format(SVIEWER_URL, "retmode=text&id=FAKE&db=nucleotide&report=gff3")
     assert expected == core.generate_url("FAKE", config)
+
+def test_generate_url_with_api_key():
+    """Test URL generation for API key"""
+    config = core.Config(api_key='97ae64f04b7e33672d5591a575b5f0c4c908')
+    expected = "{}?{}".format(ENTREZ_URL, "retmode=text&id=FAKE&db=nucleotide&api_key=97ae64f04b7e33672d5591a575b5f0c4c908&rettype=gbwithparts")
+    assert expected == core.generate_url("FAKE", config)
+
+    config.format = 'gff3'
+    expected = "{}?{}".format(SVIEWER_URL, "retmode=text&id=FAKE&db=nucleotide&api_key=97ae64f04b7e33672d5591a575b5f0c4c908&report=gff3")
+    assert expected == core.generate_url("FAKE", config)
