@@ -63,6 +63,9 @@ def build_params(dl_id, config):
 
     params['db'] = config.molecule
 
+    if config.api_key != 'none':
+        params['api_key'] = config.api_key
+
     if config.molecule == 'nucleotide':
         if config.format == 'genbank':
             params['rettype'] = 'gbwithparts'

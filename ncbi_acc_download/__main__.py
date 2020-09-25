@@ -18,6 +18,8 @@ def main():
     parser.add_argument('ids', nargs='+', metavar='NCBI-accession')
     parser.add_argument('-m', '--molecule', default="nucleotide", choices=["nucleotide", "protein"],
                         help="Molecule type to download. Default: %(default)s")
+    parser.add_argument('--api_key', default=SUPPRESS,
+                        help="Specify USER NCBI API key. More info at https://www.ncbi.nlm.nih.gov/books/NBK25497/")
     if HAVE_BIOPYTHON:
         parser.add_argument('-e', '--extended-validation', action="store", default='none',
                             choices=('none', 'loads', 'all'),
