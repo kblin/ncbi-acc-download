@@ -27,6 +27,7 @@ from ncbi_acc_download.errors import (
     BadPatternError,
     DownloadError,
     InvalidIdError,
+    TooManyRequests,
 )
 
 ERROR_PATTERNS = (
@@ -90,6 +91,11 @@ def get_stream(url, params):
         raise DownloadError(str(e))
 
     if r.status_code != requests.codes.ok:
+        if r.status_code == 429:
+            retry_after = r.headers.get("retry-after")
+            print("Too many requests, please consider using --api-key parameter (see https://www.ncbi.nlm.nih.gov/books/NBK25497/).")
+            raise TooManyRequests("Blocked at NCBI Enterz API for too many requests", retry_after)
+
         print("Failed to download file with id {} from NCBI".format(params['id']), file=sys.stderr)
         raise InvalidIdError("Download failed with return code: {}".format(r.status_code), params["id"], r.status_code)
 

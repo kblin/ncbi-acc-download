@@ -21,12 +21,20 @@ class DownloadError(RuntimeError):
 
 
 class InvalidIdError(RuntimeError):
-    """Error thrown when Entrez responds with a 4xx error."""
+    """Error thrown when Entrez responds with a 4xx error (other than 429)."""
 
     def __init__(self, message, ids, status_code):
         super().__init__(message)
         self.ids = ids
         self.status_code = status_code
+
+
+class TooManyRequests(DownloadError):
+    """Error thrown when Entrez responds with a 429 error."""
+
+    def __init__(self, message, retry_after):
+        super().__init__(message)
+        self.retry_after = retry_after
 
 
 class BadPatternError(DownloadError):

@@ -14,6 +14,7 @@ from ncbi_acc_download.errors import (
     BadPatternError,
     DownloadError,
     InvalidIdError,
+    TooManyRequests,
 )
 
 
@@ -225,6 +226,14 @@ def test_get_stream_bad_status(req):
     req.get(ENTREZ_URL, text=u'Nope!', status_code=404)
     params = dict(id='FAKE')
     with pytest.raises(InvalidIdError):
+        core.get_stream(ENTREZ_URL, params)
+
+
+def test_get_stream_too_many_requests(req):
+    """Test getting a download stream handles bad status codes."""
+    req.get(ENTREZ_URL, text=u'Whoa, slow down', status_code=429, headers={"Retry-After": "2"})
+    params = dict(id='FAKE')
+    with pytest.raises(TooManyRequests):
         core.get_stream(ENTREZ_URL, params)
 
 
