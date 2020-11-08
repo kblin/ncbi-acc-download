@@ -16,6 +16,7 @@ from __future__ import print_function
 import functools
 from io import StringIO
 import sys
+import time
 try:
     from urllib import urlencode
 except ImportError:
@@ -27,7 +28,10 @@ from ncbi_acc_download.download import (
     get_url_by_format,
     write_stream,
 )
-from ncbi_acc_download.errors import ValidationError
+from ncbi_acc_download.errors import (
+    TooManyRequests,
+    ValidationError,
+)
 from ncbi_acc_download.validate import (
     HAVE_BIOPYTHON,
     run_extended_validation,
@@ -109,8 +113,15 @@ def download_to_file(dl_id, config, filename=None, append=False):
     url = get_url_by_format(config)
     params = build_params(dl_id, config)
 
-    r = get_stream(url, params)
-    config.emit("Downloading {}\n".format(r.url))
+    try:
+        r = get_stream(url, params)
+        config.emit("Downloading {}\n".format(r.url))
+    except TooManyRequests as err:
+        config.emit("Server requested us to slow down, waiting {} seconds.".format(err.retry_after))
+        time.sleep(int(err.retry_after))
+        r = get_stream(url, params)
+        config.emit("Downloading {}\n".format(r.url))
+
     if config.keep_filename:
         outfile_name = filename
     else:

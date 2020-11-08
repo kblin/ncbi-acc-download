@@ -78,6 +78,22 @@ def test_download_to_file_append(req, tmpdir):
     assert len(expected.readlines()) == 3
 
 
+def test_download_to_file_retry(req, tmpdir):
+    """Test downloading things from NCBI, retrying after a 429 status."""
+    req.get(ENTREZ_URL, response_list=[
+        {"text": u'Whoa, slow down', "status_code": 429, "headers": {"Retry-After": "0"}},
+        {"text": 'This works.'},
+    ])
+    outdir = tmpdir.mkdir('outdir')
+    filename = outdir.join('foo')
+    expected = outdir.join('foo.gbk')
+    config = core.Config(molecule='nucleotide', verbose=False)
+
+    core.download_to_file('FOO', config, filename=filename)
+
+    assert expected.check()
+
+
 def test_build_params():
     """Test we build the right set of parameters."""
     config = core.Config(molecule='nucleotide', verbose=False)
