@@ -93,6 +93,21 @@ def test_download_wgs_parts_wgs(req):
     wgs_contig.close()
 
 
+def test_download_wgs_parts_wgs_retry(req):
+    cfg = Config(format="genbank")
+    wgs_contig = open(full_path('wgs.gbk'), 'rt')
+    req.get(ENTREZ_URL, response_list=[
+        {"text": u'Whoa, slow down', "status_code": 429, "headers": {"Retry-After": "0"}},
+        {"body": open(full_path('wgs_full.gbk'), 'rt')},
+    ])
+
+    outhandle = wgs.download_wgs_parts(wgs_contig, cfg)
+    wgs_full = open(full_path('wgs_full.gbk'), 'rt')
+    assert outhandle.getvalue() == wgs_full.read()
+    wgs_full.close()
+    wgs_contig.close()
+
+
 def test_download_wgs_parts_wgs_scafld(req):
     cfg = Config(format="genbank")
     wgs_contig = open(full_path('wgs_scafld.gbk'), 'rt')
@@ -109,6 +124,21 @@ def test_download_wgs_parts_supercontig(req):
     cfg = Config(format="genbank")
     supercontig = open(full_path('supercontig.gbk'), 'rt')
     req.get(ENTREZ_URL, body=open(full_path('supercontig_full.gbk'), 'rt'))
+
+    outhandle = wgs.download_wgs_parts(supercontig, cfg)
+    supercontig_full = open(full_path('supercontig_full.gbk'), 'rt')
+    assert outhandle.getvalue() == supercontig_full.read()
+    supercontig_full.close()
+    supercontig.close()
+
+
+def test_download_wgs_parts_supercontig_retry(req):
+    cfg = Config(format="genbank")
+    supercontig = open(full_path('supercontig.gbk'), 'rt')
+    req.get(ENTREZ_URL, response_list=[
+        {"text": u'Whoa, slow down', "status_code": 429, "headers": {"Retry-After": "0"}},
+        {"body": open(full_path('supercontig_full.gbk'), 'rt')}
+    ])
 
     outhandle = wgs.download_wgs_parts(supercontig, cfg)
     supercontig_full = open(full_path('supercontig_full.gbk'), 'rt')

@@ -13,15 +13,9 @@
 # limitations under the License.
 """Recursively download the actual entries for WGS records."""
 
+from io import StringIO
 import sys
-
-# In python2, SeqIO.write insists on writing 'str', so make sure
-# the temporary handle accepts that.
-# TODO: Remove this once we drop 2.7 support
-if sys.version_info[0] >= 3:  # pragma: no cover
-    from io import StringIO
-else:  # pragma: no cover
-    from StringIO import StringIO
+import time
 
 from ncbi_acc_download.download import (
     build_params,
@@ -29,6 +23,8 @@ from ncbi_acc_download.download import (
     get_url_by_format,
     write_stream,
 )
+
+from ncbi_acc_download.errors import TooManyRequests
 
 try:
     from Bio import SeqIO
@@ -150,8 +146,15 @@ def download_wgs_for_record(record, config):
         url = get_url_by_format(config)
         params = build_params(dl_id, config)
 
-        r = get_stream(url, params)
-        config.emit("Downloading {}\n".format(r.url))
+        try:
+            r = get_stream(url, params)
+            config.emit("Downloading {}\n".format(r.url))
+        except TooManyRequests as err:
+            # Wait, and then retry
+            config.emit("Server requested us to slow down, waiting {} seconds\n".format(err.retry_after))
+            time.sleep(int(err.retry_after))
+            r = get_stream(url, params)
+            config.emit("Downloading {}\n".format(r.url))
 
         write_stream(r, handle, dl_id, config)
 
@@ -170,8 +173,15 @@ def fix_supercontigs(record, config):
     dl_id = record.id
     url = get_url_by_format(config)
     params = build_params(dl_id, config)
-    r = get_stream(url, params)
-    config.emit("Downloading {}\n".format(r.url))
+    try:
+        r = get_stream(url, params)
+        config.emit("Downloading {}\n".format(r.url))
+    except TooManyRequests as err:
+        # Wait, and then retry
+        config.emit("Server requested us to slow down, waiting {} seconds\n".format(err.retry_after))
+        time.sleep(int(err.retry_after))
+        r = get_stream(url, params)
+        config.emit("Downloading {}\n".format(r.url))
 
     write_stream(r, handle, dl_id, config)
 
