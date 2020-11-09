@@ -177,6 +177,5 @@ def _validate_and_write(request, orig_handle, dl_id, config):
         if not run_extended_validation(handle, config.format, config.extended_validation):
             raise ValidationError("Sequence(s) downloaded for {} failed to load.".format(dl_id))
 
-
     if config.extended_validation != 'none' or config.recursive:
         orig_handle.write(handle.getvalue())

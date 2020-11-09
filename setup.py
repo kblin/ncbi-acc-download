@@ -7,6 +7,7 @@ from setuptools.command.test import test as TestCommand
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
+
 long_description = read('README.md')
 
 install_requires = [
@@ -26,6 +27,7 @@ tests_require = [
     'pytest-cov',
     'requests-mock',
     'pytest-mock',
+    'flake8',
 ]
 
 recursive_require = [

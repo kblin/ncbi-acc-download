@@ -32,5 +32,5 @@ def run_extended_validation(handle, file_format, validation_level):
         logging.error(err)
         return False
     except Exception as err:
-        logging.error("Unhandled exception %s while parsing sequence file.")
+        logging.error("Unhandled exception %s while parsing sequence file.", err)
         return False

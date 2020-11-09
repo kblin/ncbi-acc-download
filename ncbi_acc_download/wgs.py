@@ -14,7 +14,6 @@
 """Recursively download the actual entries for WGS records."""
 
 from io import StringIO
-import sys
 import time
 
 from ncbi_acc_download.download import (

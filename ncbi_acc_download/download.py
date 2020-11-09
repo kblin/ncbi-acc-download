@@ -90,7 +90,8 @@ def get_stream(url, params):
     if r.status_code != requests.codes.ok:
         if r.status_code == 429:
             retry_after = r.headers.get("retry-after")
-            print("Too many requests, please consider using --api-key parameter (see https://www.ncbi.nlm.nih.gov/books/NBK25497/).")
+            print("Too many requests, please consider using --api-key parameter"
+                  " (see https://www.ncbi.nlm.nih.gov/books/NBK25497/).")
             raise TooManyRequests("Blocked at NCBI Enterz API for too many requests", retry_after)
 
         print("Failed to download file with id {} from NCBI".format(params['id']), file=sys.stderr)
@@ -115,4 +116,3 @@ def write_stream(request, handle, dl_id, config):
         print("Download of {!r} aborted: {}".format(dl_id, str(err)), file=sys.stderr)
         raise DownloadError(str(err))
     config.emit(u'\n')
-
