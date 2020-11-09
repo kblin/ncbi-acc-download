@@ -16,10 +16,7 @@
 from __future__ import print_function
 
 from collections import OrderedDict
-try:
-    from httplib import IncompleteRead
-except ImportError:
-    from http.client import IncompleteRead
+from http.client import IncompleteRead
 import requests
 import sys
 

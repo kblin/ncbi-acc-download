@@ -17,10 +17,7 @@ import functools
 from io import StringIO
 import sys
 import time
-try:
-    from urllib import urlencode
-except ImportError:
-    from urllib.parse import urlencode
+from urllib.parse import urlencode
 
 from ncbi_acc_download.download import (
     build_params,
@@ -59,23 +56,24 @@ class Config(object):
         'verbose',
     )
 
-    # TODO: once python2 support can be dropped, switch to explicit argnames + * to drop extra args
-    def __init__(self, **kwargs):
+    def __init__(self, *, extended_validation="none", molecule="nucleotide", out=None,
+                 recursive=False, api_key="none", entrez_url=ENTREZ_URL, sviewer_url=SVIEWER_URL,
+                 format="genbank", verbose=False, **kwargs):
         """Initialise the config from scratch."""
-        self.extended_validation = kwargs.get('extended_validation', 'none')
-        self.molecule = kwargs.get('molecule', 'nucleotide')
-        self.keep_filename = 'out' in kwargs
-        self.recursive = kwargs.get('recursive', False)
-        self.api_key = kwargs.get('api_key', 'none')
+        self.extended_validation = extended_validation
+        self.molecule = molecule
+        self.keep_filename = out is not None
+        self.recursive = recursive
+        self.api_key = api_key
 
-        self.entrez_url = kwargs.get('entrez_url', ENTREZ_URL)
-        self.sviewer_url = kwargs.get('sviewer_url', SVIEWER_URL)
+        self.entrez_url = entrez_url
+        self.sviewer_url = sviewer_url
 
         if self.molecule == 'nucleotide':
-            self.format = kwargs.get('format', 'genbank')
+            self.format = format
         else:
             self.format = 'fasta'
-        self.verbose = kwargs.get('verbose', False)
+        self.verbose = verbose
 
         def noop(arg):
             """Don't do anything."""
