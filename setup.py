@@ -31,10 +31,10 @@ tests_require = [
 ]
 
 recursive_require = [
-    'biopython',
+    'biopython >= 1.79',
 ]
 validate_require = [
-    'biopython',
+    'biopython >= 1.79',
 ]
 
 

@@ -27,7 +27,7 @@ from ncbi_acc_download.errors import TooManyRequests
 
 try:
     from Bio import SeqIO
-    from Bio.Seq import UnknownSeq
+    from Bio.Seq import UndefinedSequenceError
     HAVE_BIOPYTHON = True
 except ImportError:  # pragma: no cover
     HAVE_BIOPYTHON = False
@@ -101,7 +101,13 @@ def download_wgs_parts(handle, config):
     handle.seek(0)
     records = list(SeqIO.parse(handle, config.format))
     for record in records:
-        run_download = isinstance(record.seq, UnknownSeq)
+        # TODO: If Biopython ever provides a nice check for undefined sequences,
+        # replace the exception-based check here.
+        run_download = False
+        try:
+            bytes(record.seq)
+        except UndefinedSequenceError:
+            run_download = True
         if run_download and ('wgs_scafld' in record.annotations or
                              'wgs' in record.annotations or
                              'tsa' in record.annotations):
