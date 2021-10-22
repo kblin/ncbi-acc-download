@@ -71,6 +71,17 @@ run
 ncbi-acc-download --recursive NZ_EXMP01000000
 ```
 
+You can supply a genomic range to the accession download using `--range`
+```
+ncbi-acc-download NC_007194 --range 1001:9000
+```
+As cutting a record up with a range operator like that can leave partial features at both ends of the
+record, you can combine the range download with the new `correct` extended validator to remove the
+partial features.
+```
+ncbi-acc-download NC_007194 --range 1001:9000 --extended-validation correct
+```
+
 You can get more detailed information on the download progress by using the `--verbose` or `-v` flag.
 
 To get an overview of all options, run
