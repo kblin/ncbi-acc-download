@@ -84,7 +84,11 @@ def test_download_wgs_parts_no_biopython():
 def test_download_wgs_parts_wgs(req):
     cfg = Config(format="genbank")
     wgs_contig = open(full_path('wgs.gbk'), 'rt')
-    req.get(ENTREZ_URL, body=open(full_path('wgs_full.gbk'), 'rt'))
+    req.get(
+        ENTREZ_URL,
+        body=open(full_path('wgs_full.gbk'), 'rb'),
+        headers={"Content-Type": "text/plain; charset=UTF-8"},
+    )
 
     outhandle = wgs.download_wgs_parts(wgs_contig, cfg)
     wgs_full = open(full_path('wgs_full.gbk'), 'rt')
@@ -98,7 +102,10 @@ def test_download_wgs_parts_wgs_retry(req):
     wgs_contig = open(full_path('wgs.gbk'), 'rt')
     req.get(ENTREZ_URL, response_list=[
         {"text": u'Whoa, slow down', "status_code": 429, "headers": {"Retry-After": "0"}},
-        {"body": open(full_path('wgs_full.gbk'), 'rt')},
+        {
+            "body": open(full_path('wgs_full.gbk'), 'rb'),
+            "headers": {"Content-Type": "text/plain; charset=UTF-8"},
+        },
     ])
 
     outhandle = wgs.download_wgs_parts(wgs_contig, cfg)
@@ -123,7 +130,11 @@ def test_download_wgs_parts_wgs_scafld(req):
 def test_download_wgs_parts_supercontig(req):
     cfg = Config(format="genbank")
     supercontig = open(full_path('supercontig.gbk'), 'rt')
-    req.get(ENTREZ_URL, body=open(full_path('supercontig_full.gbk'), 'rt'))
+    req.get(
+        ENTREZ_URL,
+        body=open(full_path('supercontig_full.gbk'), 'rb'),
+        headers={"Content-Type": "text/plain; charset=UTF-8"},
+    )
 
     outhandle = wgs.download_wgs_parts(supercontig, cfg)
     supercontig_full = open(full_path('supercontig_full.gbk'), 'rt')
@@ -137,7 +148,10 @@ def test_download_wgs_parts_supercontig_retry(req):
     supercontig = open(full_path('supercontig.gbk'), 'rt')
     req.get(ENTREZ_URL, response_list=[
         {"text": u'Whoa, slow down', "status_code": 429, "headers": {"Retry-After": "0"}},
-        {"body": open(full_path('supercontig_full.gbk'), 'rt')}
+        {
+            "body": open(full_path('supercontig_full.gbk'), 'rb'),
+            "headers": {"Content-Type": "text/plain; charset=UTF-8"},
+        },
     ])
 
     outhandle = wgs.download_wgs_parts(supercontig, cfg)
