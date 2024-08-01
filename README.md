@@ -21,8 +21,8 @@ pip install --upgrade pip
 and then rerun the `ncbi-acc-download` install.
 
 `ncbi-acc-download` is only developed and tested on Python releases still under active
-support by the Python project. At the moment, this means versions 3.6, 3.7, 3.8, and 3.9.
-Specifically, no attempt at testing under Python versions older than 3.6 is being made.
+support by the Python project. At the moment, this means versions 3.8, 3.9, 3.10, 3.11 and 3.12.
+Specifically, no attempt at testing under Python versions older than 3.8 is being made.
 
 `ncbi-acc-download` 0.2.6 was the last version to support Python 2.7.
 
