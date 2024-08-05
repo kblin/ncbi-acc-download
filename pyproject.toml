@@ -22,7 +22,7 @@ dynamic = ["version"]
 
 [project.optional-dependencies]
 recursive = ["biopython >= 1.79"]
-validate = ["biopython >= 179"]
+validate = ["biopython >= 1.79"]
 testing = [
 	"pytest",
 	"coverage",
