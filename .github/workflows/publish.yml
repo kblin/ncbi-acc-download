@@ -32,7 +32,7 @@ jobs:
     environment:
       name: pypi
       url: https://pypi.org/p/ncbi-acc-download
-    perissions:
+    permissions:
       id-token: write
     steps:
     - name: Download all the dists
@@ -50,7 +50,7 @@ jobs:
     environment:
       name: testpypi
       url: https://test.pypi.org/p/ncbi-acc-download
-    perissions:
+    permissions:
       id-token: write
     steps:
     - name: Download all the dists
