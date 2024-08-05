@@ -5,6 +5,8 @@ ncbi_acc_download.egg-info/*
 htmlcov/*
 .cache/*
 dist/*
+build/*
+changes.txt
 
 # IDEs
 .idea/*
