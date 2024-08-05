@@ -1,0 +1,63 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ncbi-acc-download"
+authors = [{ name = "Kai Blin", email = "kblin@biosustain.dtu.dk" }]
+description = "Download genome files from NCBI by accession."
+readme = "README.md"
+dependencies = ["requests"]
+requires-python = ">=3.8"
+license = { file = "LICENSE" }
+classifiers = [
+	"Programming Language :: Python",
+	"Development Status :: 3 - Alpha",
+	"Intended Audience :: Science/Research",
+	"Topic :: Scientific/Engineering :: Bio-Informatics",
+	"License :: OSI Approved :: Apache Software License",
+	"Operating System :: OS Independent",
+]
+dynamic = ["version"]
+
+[project.optional-dependencies]
+recursive = ["biopython >= 1.79"]
+validate = ["biopython >= 179"]
+testing = [
+	"pytest",
+	"coverage",
+	"pytest-cov",
+	"requests-mock",
+	"pytest-mock",
+	"flake8",
+	"ruff",
+]
+
+[project.scripts]
+ncbi-acc-download = "ncbi_acc_download.__main__:main"
+nad = "ncbi_acc_download.__main__:main"
+
+[project.urls]
+Homepage = "https://github.com/kblin/ncbi-acc-download"
+Issues = "https://github.com/kblin/ncbi-acc-download/issues"
+
+[tool.setuptools]
+packages = ["ncbi_acc_download"]
+
+[tool.setuptools.dynamic]
+version = { attr = "ncbi_acc_download.__version__" }
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = [
+	# pycodestyle
+	"E",
+	# Pyflakes
+	"F",
+	#	# pyupgrade  # don't enable this yet
+	#"UP",
+	# flake8-bugbear
+	"B",
+]
